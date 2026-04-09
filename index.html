@@ -680,6 +680,166 @@ footer {
   .footer-note { text-align: center; }
   .beta-form { flex-direction: column; }
 }
+
+/* ── GOAL CALCULATOR ─────────────────────────────── */
+.goal-section {
+  background: var(--surf-0);
+  padding: 100px 48px;
+  position: relative;
+}
+.goal-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 100%, rgba(232,97,74,0.04) 0%, transparent 65%);
+  pointer-events: none;
+}
+.goal-calc {
+  max-width: 580px;
+  margin: 0 auto;
+  background: var(--surf-1);
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(30,24,16,0.06), 0 12px 40px rgba(30,24,16,0.08);
+}
+.goal-calc-top {
+  padding: 32px 32px 24px;
+  text-align: center;
+  border-bottom: 1px solid var(--line);
+  background: linear-gradient(180deg, var(--surf-0) 0%, var(--surf-1) 100%);
+}
+.goal-calc-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-bottom: 12px;
+}
+.goal-calc-amount {
+  font-size: 56px;
+  font-weight: 700;
+  letter-spacing: -0.05em;
+  color: var(--ink-1);
+  line-height: 1;
+  margin-bottom: 8px;
+  transition: all 0.2s;
+  font-family: var(--ff);
+}
+.goal-calc-sub {
+  font-size: 13px;
+  color: var(--ink-3);
+  line-height: 1.6;
+  max-width: 320px;
+  margin: 0 auto;
+  min-height: 40px;
+  transition: opacity 0.3s;
+}
+/* Slider */
+.goal-slider {
+  width: 100%;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 4px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--coral) 0%, var(--coral) var(--pct, 17%), var(--surf-3) var(--pct, 17%));
+  outline: none;
+  cursor: pointer;
+}
+.goal-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #fff;
+  border: 2.5px solid var(--coral);
+  box-shadow: 0 2px 8px rgba(232,97,74,0.30), 0 1px 3px rgba(0,0,0,0.12);
+  cursor: pointer;
+  transition: transform 0.15s;
+}
+.goal-slider::-webkit-slider-thumb:hover { transform: scale(1.15); }
+.goal-slider::-moz-range-thumb {
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  background: #fff;
+  border: 2.5px solid var(--coral);
+  box-shadow: 0 2px 8px rgba(232,97,74,0.30);
+  cursor: pointer;
+}
+.goal-range-label {
+  font-size: 11px;
+  color: var(--ink-3);
+  font-family: var(--ff);
+}
+/* Output cards */
+.goal-outputs {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  border-top: 1px solid var(--line);
+}
+.goal-out-card {
+  padding: 18px 14px;
+  text-align: center;
+  border-right: 1px solid var(--line);
+}
+.goal-out-card:last-child { border-right: none; }
+.goal-out-card-mid {
+  background: rgba(232,97,74,0.03);
+}
+.goal-out-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-bottom: 6px;
+}
+.goal-out-amount {
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--ink-1);
+  margin-bottom: 4px;
+  font-family: var(--ff);
+  transition: all 0.25s;
+}
+.goal-out-note {
+  font-size: 11px;
+  color: var(--ink-3);
+  line-height: 1.5;
+}
+/* Wellbeing note */
+.goal-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 16px 20px;
+  background: var(--surf-2);
+  border-top: 1px solid var(--line);
+}
+.goal-note-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--sage);
+  flex-shrink: 0;
+  margin-top: 5px;
+}
+.goal-note-text {
+  font-size: 13px;
+  color: var(--ink-2);
+  line-height: 1.65;
+  font-style: italic;
+}
+
+@media (max-width: 768px) {
+  .goal-outputs { grid-template-columns: 1fr; }
+  .goal-out-card { border-right: none; border-bottom: 1px solid var(--line); }
+  .goal-out-card:last-child { border-bottom: none; }
+  .goal-calc-amount { font-size: 42px; }
+  .goal-section { padding: 72px 24px; }
+}
+
 </style>
 </head>
 <body>
@@ -901,15 +1061,105 @@ footer {
 </section>
 
 <!-- ── BETA CTA ───────────────────────────────────── -->
+
+<!-- ── GOAL CALCULATOR ─────────────────────────────── -->
+<section class="goal-section" id="goal">
+  <div class="section-inner">
+    <div style="max-width:640px;margin:0 auto;text-align:center">
+      <span class="section-label reveal">Your starting point</span>
+      <h2 class="section-title reveal reveal-delay-1">What does a sustainable<br>year look like for you?</h2>
+      <p class="section-body reveal reveal-delay-2" style="margin:0 auto 48px;text-align:center">There's no right answer here — and no pressure. The most useful starting point is whatever feels honest and achievable based on your recent work, not an aspirational figure that adds to the noise. Slf:mde is here to help you move toward your goals steadily, not to set unrealistic benchmarks.</p>
+    </div>
+
+    <div class="goal-calc reveal reveal-delay-2">
+      <!-- Slider input -->
+      <div class="goal-calc-top">
+        <div class="goal-calc-label">My realistic annual earnings goal</div>
+        <div class="goal-calc-amount" id="goal-display">£28,000</div>
+        <div class="goal-calc-sub" id="goal-sub">Based on your recent work and what feels genuinely achievable</div>
+      </div>
+
+      <div style="padding:0 32px 28px">
+        <input
+          type="range"
+          class="goal-slider"
+          id="goal-slider"
+          min="8000"
+          max="120000"
+          step="1000"
+          value="28000"
+          oninput="updateGoal(this.value)"
+        />
+        <div style="display:flex;justify-content:space-between;margin-top:6px">
+          <span class="goal-range-label">£8k</span>
+          <span class="goal-range-label">£120k</span>
+        </div>
+      </div>
+
+      <!-- Output cards -->
+      <div class="goal-outputs" id="goal-outputs">
+        <div class="goal-out-card">
+          <div class="goal-out-label">Monthly target</div>
+          <div class="goal-out-amount" id="goal-monthly">£2,333</div>
+          <div class="goal-out-note">What a steady month looks like</div>
+        </div>
+        <div class="goal-out-card goal-out-card-mid">
+          <div class="goal-out-label">Weekly average</div>
+          <div class="goal-out-amount" id="goal-weekly">£538</div>
+          <div class="goal-out-note">Across a typical working week</div>
+        </div>
+        <div class="goal-out-card">
+          <div class="goal-out-label">Quiet month buffer</div>
+          <div class="goal-out-amount" id="goal-buffer">£4,667</div>
+          <div class="goal-out-note">Two months reserve — a calm baseline</div>
+        </div>
+      </div>
+
+      <!-- Wellbeing note -->
+      <div class="goal-note" id="goal-note">
+        <div class="goal-note-dot"></div>
+        <div class="goal-note-text" id="goal-note-text">A gentle starting point — Slf:mde helps you build toward this steadily, without the anxiety of watching every number.</div>
+      </div>
+    </div>
+
+    <div style="text-align:center;margin-top:40px" class="reveal">
+      <p style="font-size:15px;color:var(--ink-3);margin-bottom:20px;line-height:1.7">Slf:mde tracks where you actually are against where you want to be — calmly, clearly, without judgment.</p>
+      <a href="#beta" onclick="document.getElementById('beta-email').focus()" class="btn-hero btn-hero-primary" style="display:inline-flex">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        Join the beta with this goal
+      </a>
+    </div>
+  </div>
+</section>
+
 <section class="beta-section" id="beta">
   <div class="beta-inner">
     <span class="beta-eyebrow reveal">Beta programme — Liverpool 2026</span>
     <h2 class="beta-title reveal reveal-delay-1">Be among the first.</h2>
     <p class="beta-sub reveal reveal-delay-2">Slf:mde is entering beta with a small group of creative professionals in Liverpool. Join the list and we'll be in touch when a place becomes available.</p>
-    <form class="beta-form reveal reveal-delay-3" onsubmit="handleSignup(event)">
-      <input type="email" class="beta-input" placeholder="your@email.com" id="beta-email" required autocomplete="email"/>
-      <button type="submit" class="beta-btn">Join waitlist</button>
+    <form
+      class="beta-form reveal reveal-delay-3"
+      id="beta-form"
+      action="https://formspree.io/f/mreovyob"
+      method="POST"
+      onsubmit="handleSignup(event)"
+    >
+      <!-- Hidden fields — carry goal data -->
+      <input type="hidden" name="annual_goal" id="form-goal" value="£28,000"/>
+      <input type="hidden" name="_subject" value="Slf:mde Beta — New Signup"/>
+      <input type="hidden" name="_next" value=""/>
+      <input type="email" name="email" class="beta-input" placeholder="your@email.com" id="beta-email" required autocomplete="email"/>
+      <button type="submit" class="beta-btn" id="beta-submit-btn">Join waitlist</button>
     </form>
+    <div id="beta-goal-preview" style="display:none;margin-top:12px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);border-radius:12px;padding:11px 18px;font-size:13px;color:rgba(255,255,255,0.55);text-align:center">
+      Your goal of <strong id="beta-goal-display" style="color:rgba(255,255,255,0.80)">£28,000</strong> will be saved with your signup
+    </div>
+    <!-- Success message — shown after submit -->
+    <div id="beta-success" style="display:none;text-align:center;padding:20px">
+      <div style="font-size:32px;margin-bottom:12px">🎉</div>
+      <div style="font-size:18px;font-weight:600;color:#fff;margin-bottom:8px;letter-spacing:-0.02em">You're on the list</div>
+      <div style="font-size:14px;color:rgba(255,255,255,0.55);line-height:1.65">We'll be in touch when your beta place is ready.<br>Slf:mde — Liverpool 2026.</div>
+    </div>
     <p class="beta-note reveal reveal-delay-3">No financial advice. No debt products. No spam. Just Slf:mde.</p>
   </div>
 </section>
@@ -939,14 +1189,103 @@ const io = new IntersectionObserver((entries) => {
 revealEls.forEach(el => io.observe(el));
 
 // ── BETA SIGNUP → opens email client ──────────────
-function handleSignup(e) {
+// Goal state
+let currentGoal = 28000;
+
+function updateGoal(val) {
+  currentGoal = parseInt(val);
+  const monthly = Math.round(currentGoal / 12);
+  const weekly = Math.round(currentGoal / 52);
+  const buffer = Math.round(monthly * 2);
+
+  // Update display
+  document.getElementById('goal-display').textContent = '£' + currentGoal.toLocaleString();
+  document.getElementById('goal-monthly').textContent = '£' + monthly.toLocaleString();
+  document.getElementById('goal-weekly').textContent = '£' + weekly.toLocaleString();
+  document.getElementById('goal-buffer').textContent = '£' + buffer.toLocaleString();
+
+  // Update slider gradient
+  const slider = document.getElementById('goal-slider');
+  const min = 8000, max = 120000;
+  const pct = ((currentGoal - min) / (max - min)) * 100;
+  slider.style.setProperty('--pct', pct + '%');
+  slider.style.background = `linear-gradient(90deg, var(--coral) 0%, var(--coral) ${pct}%, var(--surf-3) ${pct}%)`;
+
+  // Contextual sub-label and wellbeing note
+  let sub, note;
+  if (currentGoal < 15000) {
+    sub = 'A grounded starting point — building from here is what matters';
+    note = 'Starting from a realistic base is one of the most honest and healthy things you can do. Slf:mde helps you see progress clearly, however modest the starting point.';
+  } else if (currentGoal < 25000) {
+    sub = 'A steady, achievable foundation for freelance life';
+    note = 'This is a realistic target for many creative freelancers. Slf:mde tracks your momentum toward it without adding pressure to the journey.';
+  } else if (currentGoal < 40000) {
+    sub = 'A solid, sustainable goal based on consistent creative work';
+    note = 'A thoughtful target. The most important thing is that it reflects your actual circumstances — not what you think you should earn. Slf:mde will show you how close you are, month by month.';
+  } else if (currentGoal < 65000) {
+    sub = 'An ambitious but achievable goal for an established creative professional';
+    note = 'If this reflects your recent earnings, it is a meaningful target. If it feels like a stretch, that is worth sitting with — Slf:mde is here to reduce financial anxiety, not add to it.';
+  } else {
+    sub = 'A significant goal — make sure it reflects where you genuinely are';
+    note = 'At this level, the most important thing is that this goal is grounded in evidence — recent contracts, reliable clients, a pipeline you trust. Slf:mde works best when goals feel calm, not pressured.';
+  }
+
+  document.getElementById('goal-sub').textContent = sub;
+  document.getElementById('goal-note-text').textContent = note;
+
+  // Update beta preview and hidden form field
+  const preview = document.getElementById('beta-goal-preview');
+  const goalDisplay = document.getElementById('beta-goal-display');
+  const goalField = document.getElementById('form-goal');
+  if (preview && goalDisplay) {
+    preview.style.display = 'block';
+    goalDisplay.textContent = '£' + currentGoal.toLocaleString();
+  }
+  if (goalField) goalField.value = '£' + currentGoal.toLocaleString();
+}
+
+async function handleSignup(e) {
   e.preventDefault();
+  const form = document.getElementById('beta-form');
+  const btn = document.getElementById('beta-submit-btn');
   const email = document.getElementById('beta-email').value;
-  const subject = encodeURIComponent('Slf:mde Beta — Sign Up');
-  const body = encodeURIComponent(
-    'Hi,\n\nI\'d like to join the Slf:mde beta programme.\n\nMy email: ' + email + '\n\nLooking forward to it.'
-  );
-  window.location.href = `mailto:iainstephenmorley@gmail.com?subject=${subject}&body=${body}`;
+
+  // Update hidden goal field with current slider value
+  const goalField = document.getElementById('form-goal');
+  if (goalField) goalField.value = '£' + (currentGoal || 28000).toLocaleString();
+
+  // Show loading state
+  btn.textContent = 'Sending...';
+  btn.disabled = true;
+  btn.style.opacity = '0.7';
+
+  try {
+    const data = new FormData(form);
+    const response = await fetch('https://formspree.io/f/mreovyob', {
+      method: 'POST',
+      body: data,
+      headers: { 'Accept': 'application/json' }
+    });
+
+    if (response.ok) {
+      // Show success state
+      form.style.display = 'none';
+      document.getElementById('beta-goal-preview').style.display = 'none';
+      document.getElementById('beta-success').style.display = 'block';
+    } else {
+      // Fallback — still works, just show confirmation
+      btn.textContent = 'Join waitlist';
+      btn.disabled = false;
+      btn.style.opacity = '1';
+      alert('Something went wrong — please try again or email hello@slfmde.co.uk directly.');
+    }
+  } catch(err) {
+    // Network error fallback
+    btn.textContent = 'Join waitlist';
+    btn.disabled = false;
+    btn.style.opacity = '1';
+    alert('Unable to submit — please email us directly at hello@slfmde.co.uk');
+  }
 }
 
 // ── NAV scroll effect ─────────────────────────────
