@@ -381,6 +381,7 @@ body {
 .t-sent     { background: var(--sand-lo);  color: var(--sand);  }
 .t-attention{ background: var(--dusk-lo);  color: var(--dusk);  }
 .t-cash     { background: var(--teal-lo);  color: var(--teal);  }
+.t-quote    { background: var(--dusk-lo);  color: var(--dusk);  font-style:normal; }
 .t-upcoming { background: var(--surface-3);color: var(--ink-3); }
 .t-soon     { background: var(--coral-lo); color: var(--coral); }
 
@@ -1500,6 +1501,49 @@ body {
         <div style="font-size:12px;color:rgba(255,255,255,.65);max-width:210px;line-height:1.6;font-family:var(--ff)" id="h-sub">Consistent pattern over 3 months — direction is clear</div>
       </div>
 
+      <!-- SVG HORIZON LINE OVERLAY -->
+      <svg id="h-line-svg" viewBox="0 0 360 268" preserveAspectRatio="none"
+        style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible">
+        <defs>
+          <linearGradient id="hLineGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#7BAE9A" stop-opacity="0.9"/>
+            <stop offset="60%" stop-color="#7BAE9A" stop-opacity="0.6"/>
+            <stop offset="100%" stop-color="rgba(196,168,130,0.5)" stop-opacity="0.4"/>
+          </linearGradient>
+          <filter id="hGlow">
+            <feGaussianBlur stdDeviation="1.5" result="blur"/>
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+        <!-- Terrain-following path — echoes mountain ridge loosely -->
+        <path id="h-line-path"
+          d="M 28 192 C 55 178, 80 158, 105 148 C 128 138, 148 152, 172 142 C 196 132, 218 120, 248 130 C 272 138, 298 148, 332 144"
+          fill="none" stroke="url(#hLineGrad)" stroke-width="1.5"
+          stroke-dasharray="4 3" stroke-linecap="round" filter="url(#hGlow)" opacity="0.75"/>
+        <!-- Dots — 4 data points on the path -->
+        <circle id="h-dot-0" cx="28" cy="192" r="4" fill="#7BAE9A" opacity="0.9"/>
+        <circle id="h-dot-1" cx="105" cy="148" r="3.5" fill="#7BAE9A" opacity="0.75"/>
+        <circle id="h-dot-2" cx="210" cy="133" r="3.5" fill="rgba(196,168,130,0.9)" opacity="0.75"/>
+        <circle id="h-dot-3" cx="332" cy="144" r="3" fill="rgba(196,168,130,0.6)" opacity="0.6"/>
+        <!-- Labels -->
+        <g id="h-label-0" font-family="DM Sans,sans-serif" font-size="8.5" fill="rgba(255,255,255,0.8)">
+          <text id="h-lbl-title-0" x="28" y="183" text-anchor="middle">Momentum</text>
+          <text id="h-lbl-val-0" x="28" y="173" text-anchor="middle" font-weight="600" fill="rgba(255,255,255,0.95)" font-size="9.5">72%</text>
+        </g>
+        <g id="h-label-1" font-family="DM Sans,sans-serif" font-size="8.5" fill="rgba(255,255,255,0.75)">
+          <text id="h-lbl-title-1" x="105" y="139" text-anchor="middle">Confirmed</text>
+          <text id="h-lbl-val-1" x="105" y="129" text-anchor="middle" font-weight="600" fill="rgba(255,255,255,0.9)" font-size="9.5">£3,200</text>
+        </g>
+        <g id="h-label-2" font-family="DM Sans,sans-serif" font-size="8.5" fill="rgba(255,255,255,0.65)">
+          <text id="h-lbl-title-2" x="210" y="124" text-anchor="middle">Pipeline</text>
+          <text id="h-lbl-val-2" x="210" y="114" text-anchor="middle" font-weight="600" fill="rgba(255,255,255,0.8)" font-size="9.5">£1,800</text>
+        </g>
+        <g id="h-label-3" font-family="DM Sans,sans-serif" font-size="8.5" fill="rgba(255,255,255,0.5)">
+          <text id="h-lbl-title-3" x="312" y="135" text-anchor="middle">Savings</text>
+          <text id="h-lbl-val-3" x="312" y="125" text-anchor="middle" font-weight="600" fill="rgba(255,255,255,0.65)" font-size="9.5">£8,200</text>
+        </g>
+      </svg>
+
       <!-- Path markers -->
       <div style="position:absolute;bottom:14px;left:16px;display:flex;gap:14px">
         <div style="display:flex;align-items:center;gap:4px;font-size:10px;color:rgba(255,255,255,.7);font-family:var(--ff);font-weight:500"><div style="width:14px;height:2px;background:#7BAE9A;border-radius:1px"></div>Now</div>
@@ -1553,6 +1597,21 @@ body {
       <div class="card card-sm" style="margin-bottom:8px">
         <div class="label-upper" style="margin-bottom:6px">Reading</div>
         <div style="font-size:var(--text-sm);color:var(--text);line-height:1.75;font-family:var(--ff)" id="h-reading">Your pattern is consistent and your direction is clear. The range ahead reflects natural variability — not a problem to solve.</div>
+      </div>
+
+      <!-- QUOTES POTENTIAL CARD — only shown when quotes exist -->
+      <div id="h-quotes-card" style="display:none;background:var(--dusk-lo);border:1px solid var(--dusk-mid);border-radius:var(--radius-md);padding:14px;margin-bottom:8px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+          <div style="font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--dusk)">Potential work</div>
+          <div style="font-size:10px;color:var(--dusk);opacity:.7">Not in your Horizon above</div>
+        </div>
+        <div style="font-size:13px;color:var(--ink-2);line-height:1.65" id="h-quotes-text">You have quotes out. If confirmed, these would add to your pipeline.</div>
+        <div style="margin-top:8px;display:flex;align-items:baseline;gap:6px">
+          <div style="font-size:11px;color:var(--dusk)">If all confirmed</div>
+          <div class="money" style="font-size:17px;color:var(--dusk)" id="h-quotes-amt">£0</div>
+          <div style="font-size:11px;color:var(--dusk);opacity:.7">potential added</div>
+        </div>
+        <div style="font-size:11px;color:var(--dusk);opacity:.65;margin-top:6px;line-height:1.6">Quotes are held separately from your Horizon until confirmed. Convert a quote to move it into your pipeline.</div>
       </div>
     </div>
     <div style="height:16px"></div>
@@ -1610,11 +1669,15 @@ body {
       <button class="btn btn-primary btn-sm" style="flex:1" onclick="go('s-inv-c1')">+ New Invoice</button>
       <button class="btn btn-cash btn-sm" style="flex:1" onclick="openModal('m-cash')">+ Cash Payment</button>
     </div>
+    <div style="display:flex;gap:8px;padding:0 var(--space-5) var(--space-2)">
+      <button class="btn btn-sm" style="flex:1;background:var(--dusk-lo);color:var(--dusk);border:1.5px solid var(--dusk-mid);font-size:13px;font-weight:600;padding:10px 0;border-radius:var(--radius-md)" onclick="openModal('m-quote')">+ Send Quote</button>
+    </div>
     <div style="display:flex;gap:6px;padding:0 var(--space-5) var(--space-3);overflow-x:auto">
       <div class="chip on" onclick="filterInv(this,'all')" style="flex-shrink:0;font-size:12px">All</div>
       <div class="chip" onclick="filterInv(this,'received')" style="flex-shrink:0;font-size:12px">Received</div>
       <div class="chip" onclick="filterInv(this,'sent')" style="flex-shrink:0;font-size:12px">Sent</div>
       <div class="chip" onclick="filterInv(this,'cash')" style="flex-shrink:0;font-size:12px">Cash</div>
+      <div class="chip" onclick="filterInv(this,'quotes')" style="flex-shrink:0;font-size:12px">Quotes</div>
     </div>
     <div class="scroll" style="padding:0 var(--space-5) var(--space-3)" id="inv-cards-wrap"></div>
     <div class="bnav">
@@ -1833,32 +1896,52 @@ body {
 
 </div><!-- phone end -->
 
-<!-- ══════════════════════════════════
-  MENU OVERLAY
-══════════════════════════════════ -->
+<!-- ════════ MENU OVERLAY — refined ════════ -->
 <div class="modal-bg" id="menu-overlay" onclick="if(event.target===this)closeMenu()">
-  <div class="modal" onclick="event.stopPropagation()" style="padding:16px 22px 44px;max-height:90vh">
-    <div class="m-handle"></div>
-    <div style="display:flex;align-items:center;gap:14px;margin-bottom:18px">
-      <div style="width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--coral3),var(--gold3));display:flex;align-items:center;justify-content:center;font-weight:700;font-size:16px;color:var(--coral)">IM</div>
-      <div><div style="font-size:17px;font-weight:600;color:var(--ink-1)">Iain Morley</div><div style="font-size:13px;color:var(--ink-3)">Musician · Liverpool</div></div>
-      <div style="margin-left:auto;font-family:var(--ff);font-weight:700;font-size:var(--text-sm);color:var(--coral);letter-spacing:-0.03em">Slf:mde</div>
+  <div class="modal" onclick="event.stopPropagation()" style="padding:20px 0 48px;border-radius:28px 28px 0 0">
+    <div class="m-handle" style="margin-bottom:0"></div>
+    <div style="display:flex;align-items:center;gap:14px;padding:16px 24px 16px;border-bottom:1px solid var(--line-lo)">
+      <div style="width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,var(--coral-lo),var(--gold-lo));display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;color:var(--coral);flex-shrink:0">IM</div>
+      <div style="flex:1"><div style="font-size:16px;font-weight:600;color:var(--ink-1);letter-spacing:-0.02em">Iain Morley</div><div style="font-size:12px;color:var(--ink-3);margin-top:1px">Musician · Liverpool</div></div>
+      <div style="font-size:15px;font-weight:700;color:var(--coral);letter-spacing:-0.04em">Slf:mde</div>
     </div>
-    <div class="label-upper" style="margin-bottom:6px;margin-top:0">Account</div>
-    <button class="menu-row" onclick="showSec('profile','s-momentum')"><div class="mi-box" style="background:var(--gold3)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg></div><span style="font-size:var(--text-base);color:var(--text);flex:1">Profile</span><span style="color:var(--ink-3);font-size:var(--text-lg)">›</span></button>
-    <button class="menu-row" onclick="showSec('business','s-momentum')"><div class="mi-box" style="background:var(--coral3)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--coral)" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/></svg></div><span style="font-size:var(--text-base);color:var(--text);flex:1">Business Details</span><span style="color:var(--ink-3);font-size:var(--text-lg)">›</span></button>
-    <button class="menu-row" onclick="showSec('goals','s-momentum')"><div class="mi-box" style="background:var(--dusk3)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--dusk)" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></div><span style="font-size:var(--text-base);color:var(--text);flex:1">Goals & Financial Targets</span><span style="color:var(--ink-3);font-size:var(--text-lg)">›</span></button>
-    <button class="menu-row" onclick="showSec('savings','s-momentum')"><div class="mi-box" style="background:var(--teal3)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" stroke-width="2"><path d="M12 2a10 10 0 110 20A10 10 0 0112 2z"/><path d="M12 6v6l4 2"/></svg></div><span style="font-size:var(--text-base);color:var(--text);flex:1">Savings & Pension</span><span style="color:var(--ink-3);font-size:var(--text-lg)">›</span></button>
-    <div class="label-upper" style="margin:12px 0 6px">Business Tools</div>
-    <button class="menu-row" onclick="showSec('assets','s-momentum')"><div class="mi-box" style="background:var(--sand3)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--sand)" stroke-width="2"><path d="M3 3h7v7H3zM14 3h7v7h-7zM14 14h7v7h-7zM3 14h7v7H3z"/></svg></div><span style="font-size:var(--text-base);color:var(--text);flex:1">Assets Library</span><span style="color:var(--ink-3);font-size:var(--text-lg)">›</span></button>
-    <button class="menu-row" onclick="showSec('contacts','s-momentum')"><div class="mi-box" style="background:var(--sage3)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--sage)" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg></div><span style="font-size:var(--text-base);color:var(--text);flex:1">Business Contacts</span><span style="color:var(--ink-3);font-size:var(--text-lg)">›</span></button>
-    <button class="menu-row" onclick="showSec('card','s-momentum')"><div class="mi-box" style="background:var(--dusk3)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--dusk)" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg></div><span style="font-size:var(--text-base);color:var(--text);flex:1">Digital Contact Card</span><span style="color:var(--ink-3);font-size:var(--text-lg)">›</span></button>
-    <div class="label-upper" style="margin:12px 0 6px">Growth</div>
-    <button class="menu-row" onclick="showSec('marketing','s-momentum')"><div class="mi-box" style="background:var(--coral3)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--coral)" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/></svg></div><span style="font-size:var(--text-base);color:var(--text);flex:1">Marketing Tools</span><span style="color:var(--ink-3);font-size:var(--text-lg)">›</span></button>
-    <button class="menu-row" onclick="showSec('opportunity','s-momentum')"><div class="mi-box" style="background:var(--dusk3)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--dusk)" stroke-width="2"><path d="M18 20V10M12 20V4M6 20v-6"/></svg></div><span style="font-size:var(--text-base);color:var(--text);flex:1">Opportunity</span><span class="tag t-soon" style="font-size:10px;padding:2px 8px">Coming soon</span></button>
-    <div class="label-upper" style="margin:12px 0 6px">Settings</div>
-    <button class="menu-row" onclick="showSec('settings','s-momentum')"><div class="mi-box" style="background:var(--surface-3)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text2)" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg></div><span style="font-size:var(--text-base);color:var(--text);flex:1">Settings</span><span style="color:var(--ink-3);font-size:var(--text-lg)">›</span></button>
-    <button class="menu-row" style="border-bottom:none" onclick="showSec('help','s-momentum')"><div class="mi-box" style="background:var(--surface-3)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text2)" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div><span style="font-size:var(--text-base);color:var(--text);flex:1">Help & Support</span><span style="color:var(--ink-3);font-size:var(--text-lg)">›</span></button>
+    <div style="padding:0 24px;overflow-y:auto;max-height:68vh">
+
+      <div style="padding:14px 0 6px">
+        <div class="menu-sec-lbl">Account</div>
+        <button class="menu-row" onclick="showSec('profile','s-momentum')"><div class="mi-box" style="background:var(--gold-lo)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg></div><span class="menu-row-label">Profile</span><span class="menu-arrow">›</span></button>
+        <button class="menu-row" onclick="showSec('business','s-momentum')"><div class="mi-box" style="background:var(--coral-lo)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--coral)" stroke-width="1.8"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/></svg></div><span class="menu-row-label">Business Details</span><span class="menu-arrow">›</span></button>
+        <button class="menu-row" onclick="showSec('goals','s-momentum')"><div class="mi-box" style="background:var(--dusk-lo)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--dusk)" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></div><span class="menu-row-label">Goals & Financial Targets</span><span class="menu-arrow">›</span></button>
+        <button class="menu-row" onclick="showSec('savings','s-momentum')"><div class="mi-box" style="background:var(--teal-lo)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" stroke-width="1.8"><path d="M12 2a10 10 0 110 20A10 10 0 0112 2z"/><path d="M12 6v6l4 2"/></svg></div><span class="menu-row-label">Savings & Pension</span><span class="menu-arrow">›</span></button>
+      </div>
+
+      <div style="padding:6px 0;border-top:1px solid var(--line-lo)">
+        <div class="menu-sec-lbl" style="margin-top:10px">Business Tools</div>
+        <button class="menu-row" onclick="showSec('assets','s-momentum')"><div class="mi-box" style="background:var(--sand-lo)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--sand)" stroke-width="1.8"><path d="M3 3h7v7H3zM14 3h7v7h-7zM14 14h7v7h-7zM3 14h7v7H3z"/></svg></div><span class="menu-row-label">Assets Library</span><span class="menu-arrow">›</span></button>
+        <button class="menu-row" onclick="showSec('contacts','s-momentum')"><div class="mi-box" style="background:var(--sage-lo)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--sage)" stroke-width="1.8"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></div><span class="menu-row-label">Business Contacts</span><span class="menu-arrow">›</span></button>
+        <button class="menu-row" onclick="showSec('card','s-momentum')"><div class="mi-box" style="background:var(--dusk-lo)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--dusk)" stroke-width="1.8"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg></div><span class="menu-row-label">Digital Contact Card</span><span class="menu-arrow">›</span></button>
+      </div>
+
+      <div style="padding:6px 0;border-top:1px solid var(--line-lo)">
+        <div class="menu-sec-lbl" style="margin-top:10px">Growth</div>
+        <button class="menu-row" onclick="showSec('marketing','s-momentum')"><div class="mi-box" style="background:var(--coral-lo)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--coral)" stroke-width="1.8"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/></svg></div><span class="menu-row-label">Marketing Tools</span><span class="menu-cs-badge">Soon</span></button>
+        <button class="menu-row" onclick="showSec('opportunity','s-momentum')"><div class="mi-box" style="background:var(--dusk-lo)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--dusk)" stroke-width="1.8"><path d="M18 20V10M12 20V4M6 20v-6"/></svg></div><span class="menu-row-label">Opportunity</span><span class="menu-cs-badge">Soon</span></button>
+      </div>
+
+      <div style="padding:6px 0;border-top:1px solid var(--line-lo)">
+        <div class="menu-sec-lbl" style="margin-top:10px">Connections</div>
+        <button class="menu-row" onclick="showSec('banking','s-momentum')"><div class="mi-box" style="background:var(--teal-lo)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" stroke-width="1.8"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></div><span class="menu-row-label">Open Banking</span><span class="menu-cs-badge">Soon</span></button>
+        <button class="menu-row" onclick="showSec('hmrc','s-momentum')"><div class="mi-box" style="background:var(--sage-lo)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--sage)" stroke-width="1.8"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div><span class="menu-row-label">HMRC / Making Tax Digital</span><span class="menu-cs-badge">Soon</span></button>
+        <button class="menu-row" onclick="showSec('smartinbox','s-momentum')"><div class="mi-box" style="background:var(--gold-lo)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.8"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div><span class="menu-row-label">Smart Inbox</span><span class="menu-cs-badge">Soon</span></button>
+      </div>
+
+      <div style="padding:6px 0;border-top:1px solid var(--line-lo)">
+        <div class="menu-sec-lbl" style="margin-top:10px">Settings</div>
+        <button class="menu-row" onclick="showSec('settings','s-momentum')"><div class="mi-box" style="background:var(--surf-3)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--ink-2)" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06-.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg></div><span class="menu-row-label">Settings</span><span class="menu-arrow">›</span></button>
+        <button class="menu-row" style="border-bottom:none" onclick="showSec('help','s-momentum')"><div class="mi-box" style="background:var(--surf-3)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--ink-2)" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div><span class="menu-row-label">Help & Support</span><span class="menu-arrow">›</span></button>
+      </div>
+
+    </div>
   </div>
 </div>
 
@@ -1892,6 +1975,125 @@ body {
   <button class="btn btn-ghost" style="margin-top:8px" onclick="closeModal('m-event')">Cancel</button>
 </div></div>
 
+
+<!-- QUOTE MODAL -->
+<div class="modal-bg" id="m-quote" onclick="if(event.target===this)closeModal('m-quote')">
+<div class="modal" onclick="event.stopPropagation()">
+  <div class="m-handle"></div>
+  <div class="m-title">Send a Quote</div>
+  <div class="m-sub">A quote gives potential clients a clear picture of what you'd charge. It won't affect Momentum — if they accept, convert it to confirm the work.</div>
+  <div class="ig"><label class="il">Client name</label><input class="inp" type="text" placeholder="e.g. Meridian Studio" id="q-client"/></div>
+  <div class="ig"><label class="il">Work description</label><input class="inp" type="text" placeholder="e.g. Brand photography — full day" id="q-desc"/></div>
+  <div class="irow">
+    <div class="ig"><label class="il">Amount (£)</label><input class="inp" type="number" placeholder="0" id="q-amt" style="font-weight:700;font-size:20px"/></div>
+    <div class="ig"><label class="il">Valid until</label><input class="inp" type="date" id="q-date"/></div>
+  </div>
+  <div style="background:var(--dusk-lo);border-radius:var(--radius-sm);padding:10px 12px;margin-bottom:var(--space-3);font-size:12px;color:var(--dusk);line-height:1.6">Quotes are held separately — they appear in Horizon as potential work only, with a conservative weighting. Convert to pipeline when the client confirms.</div>
+  <button class="btn" style="background:var(--dusk);color:#fff;box-shadow:0 4px 16px rgba(139,126,200,.28);margin-top:4px;width:100%;border:none;border-radius:var(--radius-md);padding:15px;font-size:var(--text-base);font-weight:600;cursor:pointer" onclick="saveQuote()">Send Quote</button>
+  <button class="btn btn-ghost" style="margin-top:8px" onclick="closeModal('m-quote')">Cancel</button>
+</div></div>
+
+<!-- INVOICE PROMPT MODAL — lean sync: offered after adding billable event -->
+<div class="modal-bg" id="m-inv-prompt" onclick="if(event.target===this)dismissInvoicePrompt()">
+<div class="modal" onclick="event.stopPropagation()" style="padding:22px 22px 40px">
+  <div class="m-handle"></div>
+  <!-- Lean signal icon -->
+  <div style="width:52px;height:52px;border-radius:16px;background:var(--sage3);display:flex;align-items:center;justify-content:center;margin-bottom:16px">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--sage)" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+  </div>
+  <div style="font-size:var(--text-lg);font-weight:600;color:var(--text);margin-bottom:6px">Create a draft invoice?</div>
+  <div style="font-size:13px;color:var(--ink-3);line-height:1.7;margin-bottom:20px">You've added a billable gig for <strong id="ip-client" style="color:var(--text);font-weight:600"></strong> worth <strong id="ip-amount" style="color:var(--text);font-weight:600"></strong>. A draft invoice is ready — one tap to open it pre-filled and ready to send.</div>
+  
+  <!-- What gets pre-filled preview -->
+  <div style="background:var(--surface-2);border-radius:var(--r2);padding:14px;margin-bottom:18px">
+    <div style="font-size:var(--text-xs);color:var(--ink-3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px;font-weight:500">Pre-filled for you</div>
+    <div style="display:flex;flex-direction:column;gap:6px">
+      <div style="display:flex;gap:8px;font-size:13px"><span style="color:var(--ink-3);width:64px;flex-shrink:0">Client</span><span style="color:var(--text);font-weight:500" id="ip-client2"></span></div>
+      <div style="display:flex;gap:8px;font-size:13px"><span style="color:var(--ink-3);width:64px;flex-shrink:0">Work</span><span style="color:var(--ink-1)" id="ip-desc"></span></div>
+      <div style="display:flex;gap:8px;font-size:13px"><span style="color:var(--ink-3);width:64px;flex-shrink:0">Amount</span><span style="color:var(--text);font-weight:600" id="ip-amount2"></span></div>
+    </div>
+  </div>
+
+  <button class="btn btn-sage" onclick="createDraftFromEvent()" style="margin-bottom:8px">
+    <span style="display:flex;align-items:center;justify-content:center;gap:8px">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+      Open pre-filled invoice
+    </span>
+  </button>
+  <button class="btn btn-ghost" onclick="dismissInvoicePrompt()">Not yet — I'll do it later</button>
+  
+  <div style="text-align:center;margin-top:12px;font-size:var(--text-xs);color:var(--ink-3);line-height:1.6">This is the lean approach — the gig is already synced to Momentum and Horizon. The invoice is the last step.</div>
+</div></div>
+
+<!-- DEV / TEST PANEL -->
+<div class="modal-bg" id="m-dev" onclick="if(event.target===this)closeModal('m-dev')">
+<div class="dev-panel" onclick="event.stopPropagation()">
+  <div class="m-handle" style="background:rgba(255,255,255,0.15)"></div>
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
+    <div>
+      <div style="font-size:16px;font-weight:600;color:#fff;letter-spacing:-0.02em">Developer Panel <span class="dev-tag">Test mode</span></div>
+      <div style="font-size:12px;color:rgba(255,255,255,0.38);margin-top:3px">Edit values and watch the app respond in real time</div>
+    </div>
+  </div>
+
+  <!-- INCOME EDITOR -->
+  <div class="dev-section">
+    <div class="dev-section-title">Income data — edit any value</div>
+    <div id="dev-income-rows"></div>
+    <button class="dev-btn dev-btn-coral" style="width:100%;margin-top:8px" onclick="addDevIncome()">+ Add income entry</button>
+  </div>
+
+  <!-- QUICK SCENARIOS -->
+  <div class="dev-section">
+    <div class="dev-section-title">Quick scenarios</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <button class="dev-btn dev-btn-ghost-light" onclick="loadScenario('strong')">Strong month</button>
+      <button class="dev-btn dev-btn-ghost-light" onclick="loadScenario('quiet')">Quiet period</button>
+      <button class="dev-btn dev-btn-ghost-light" onclick="loadScenario('building')">Building back</button>
+      <button class="dev-btn dev-btn-ghost-light" onclick="loadScenario('empty')">Empty / new user</button>
+    </div>
+  </div>
+
+  <!-- PIPELINE CONFIDENCE -->
+  <div class="dev-section">
+    <div class="dev-section-title">Pipeline confidence — affects Horizon</div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap">
+      <button class="dev-btn dev-btn-ghost-light" id="pc-strong" onclick="setPipelineConf('strong')">Strong</button>
+      <button class="dev-btn dev-btn-ghost-light" id="pc-moderate" onclick="setPipelineConf('moderate')">Moderate</button>
+      <button class="dev-btn dev-btn-ghost-light" id="pc-uncertain" onclick="setPipelineConf('uncertain')">Uncertain</button>
+    </div>
+    <div style="font-size:11px;color:rgba(255,255,255,0.30);margin-top:8px" id="dev-conf-note">Affects Horizon scenario range and signal clarity bar</div>
+  </div>
+
+  <!-- DATA STATE -->
+  <div class="dev-section">
+    <div class="dev-section-title">Current data state</div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px">
+      <button class="dev-btn dev-btn-ghost-light" onclick="toggleDevJson()">View raw JSON</button>
+      <button class="dev-btn dev-btn-danger" onclick="resetToDemo()">Reset to demo</button>
+      <button class="dev-btn dev-btn-danger" onclick="resetToEmpty()">Clear all data</button>
+    </div>
+    <div id="dev-json-view" style="display:none"></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:8px">
+      <div style="background:rgba(255,255,255,0.06);border-radius:8px;padding:10px;text-align:center">
+        <div style="font-size:18px;font-weight:700;color:#fff;letter-spacing:-0.03em" id="dev-stat-recv">-</div>
+        <div style="font-size:10px;color:rgba(255,255,255,0.35);margin-top:2px">Received</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.06);border-radius:8px;padding:10px;text-align:center">
+        <div style="font-size:18px;font-weight:700;color:#fff;letter-spacing:-0.03em" id="dev-stat-sent">-</div>
+        <div style="font-size:10px;color:rgba(255,255,255,0.35);margin-top:2px">Sent</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.06);border-radius:8px;padding:10px;text-align:center">
+        <div style="font-size:18px;font-weight:700;color:#fff;letter-spacing:-0.03em" id="dev-stat-ahead">-</div>
+        <div style="font-size:10px;color:rgba(255,255,255,0.35);margin-top:2px">Pipeline</div>
+      </div>
+    </div>
+  </div>
+
+  <button class="btn btn-ghost" style="width:100%;color:rgba(255,255,255,0.50);border-color:rgba(255,255,255,0.15);margin-top:4px" onclick="closeModal('m-dev')">Close panel</button>
+</div>
+</div>
+
 <script>
 // ─── DATA ──────────────────────────────────────────
 let received=[
@@ -1909,6 +2111,9 @@ let ahead=[
   {id:'a2',client:'Flux Creative',desc:'Brand photography',amount:620,date:'9 Apr',status:'ahead'},
   {id:'a3',client:'Nova Agency',desc:'Consultation follow-up',amount:780,date:'14 Apr',status:'ahead'},
 ];
+let quotes=[
+  {id:'q1',client:'Meridian Studio',desc:'Campaign photography — Q3',amount:1400,date:'Sent 8 Apr',status:'quote'},
+];
 let lineItems=[];
 let secFrom='s-momentum';
 
@@ -1918,6 +2123,7 @@ function go(id){
   const el=document.getElementById(id);
   if(el){el.style.display='flex';el.classList.add('active');}
   if(id==='s-invoices'){renderInvList('all');recalc();}
+  if(id==='s-horizon'){renderHorizonLine('3m');renderHorizonQuotes();}
   if(id==='s-inv-c4')buildPreview();
   if(id==='s-calendar')renderCal(4);
   window.scrollTo(0,0);
@@ -2001,22 +2207,25 @@ function statusInfo(item){
   if(item.status==='attention')return{label:'Follow up',cls:'t-attention'};
   if(item.status==='sent')return{label:'Sent',cls:'t-sent'};
   if(item.status==='ahead')return{label:'Upcoming',cls:'t-upcoming'};
+  if(item.status==='quote')return{label:'Quote',cls:'t-quote'};
   return{label:'Draft',cls:'t-upcoming'};
 }
 const ac=['#E8614A','#3AADA0','#8B7EC8','#E8A820','#7BAE9A','#C4A882'];
 function ini(n){return n.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();}
 function renderInvList(filter){
-  let all=[...received,...sent,...ahead];
+  let all=[...received,...sent,...ahead,...quotes];
   if(filter==='received')all=received;
   else if(filter==='sent')all=sent;
   else if(filter==='cash')all=received.filter(i=>i.type==='cash');
+  else if(filter==='quotes')all=quotes;
   const w=document.getElementById('inv-cards-wrap');
   if(!w)return;
   const isCollapsed=all.length>2;
   const cards=all.map((item,i)=>{
     const{label,cls}=statusInfo(item);
     const bg=ac[i%ac.length];
-    return`<div class="inv-card"><div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px"><div style="display:flex;align-items:center;gap:10px"><div style="width:36px;height:36px;border-radius:10px;background:${bg};display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0">${ini(item.client)}</div><div><div style="font-size:16px;font-weight:500;color:var(--ink-1)">${item.client}</div><div style="font-size:12px;color:var(--ink-3);margin-top:2px">${item.desc}</div></div></div><div class="money" style="font-size:20px;color:var(--ink-1)">${fmt(item.amount)}</div></div><div style="display:flex;align-items:center;justify-content:space-between"><span class="tag ${cls}">${label}</span><span style="font-size:12px;color:var(--ink-3)">${item.date||''}</span></div></div>`;
+    const convertBtn=item.status==='quote'?`<button onclick="convertQuote('${item.id}')" style="font-size:11px;font-weight:600;color:var(--sage);background:var(--sage-lo);border:none;border-radius:999px;padding:4px 10px;cursor:pointer;margin-left:8px;flex-shrink:0">Convert to invoice</button>`:'';
+    return`<div class="inv-card"><div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px"><div style="display:flex;align-items:center;gap:10px"><div style="width:36px;height:36px;border-radius:10px;background:${bg};display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0">${ini(item.client)}</div><div><div style="font-size:16px;font-weight:500;color:var(--ink-1)">${item.client}</div><div style="font-size:12px;color:var(--ink-3);margin-top:2px">${item.desc}</div></div></div><div class="money" style="font-size:20px;color:var(--ink-1)">${fmt(item.amount)}</div></div><div style="display:flex;align-items:center;justify-content:space-between"><div style="display:flex;align-items:center"><span class="tag ${cls}">${label}</span>${convertBtn}</div><span style="font-size:12px;color:var(--ink-3)">${item.date||''}</span></div></div>`;
   }).join('');
   const toggleLabel=isCollapsed?`${all.length} entries — tap to expand`:`Collapse`;
   w.innerHTML=`<div class="inv-stack-wrap">
@@ -2141,6 +2350,36 @@ function dismissInvoicePrompt(){
   toast('Event added — create invoice anytime from Invoices');
 }
 
+// ─── QUOTES ──────────────────────────────────────────
+function saveQuote(){
+  const client=document.getElementById('q-client').value.trim();
+  const desc=document.getElementById('q-desc').value.trim();
+  const amt=parseFloat(document.getElementById('q-amt').value)||0;
+  const date=document.getElementById('q-date').value;
+  if(!client||!amt){toast('Please fill in client and amount');return;}
+  const dateLabel=date?'Valid until '+date:'Sent today';
+  quotes.unshift({id:'q'+Date.now(),client,desc,amount:Math.round(amt),date:dateLabel,status:'quote'});
+  document.getElementById('q-client').value='';
+  document.getElementById('q-desc').value='';
+  document.getElementById('q-amt').value='';
+  closeModal('m-quote');
+  syncAll();
+  toast('Quote added — visible in Horizon as potential work');
+}
+
+function convertQuote(id){
+  const idx=quotes.findIndex(q=>q.id===id);
+  if(idx===-1)return;
+  const q=quotes[idx];
+  quotes.splice(idx,1);
+  // Move into pipeline (ahead) with today's date
+  const today=new Date();
+  const dateStr=today.getDate()+' '+['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][today.getMonth()];
+  ahead.unshift({id:'a'+Date.now(),client:q.client,desc:q.desc,amount:q.amount,date:dateStr,status:'ahead'});
+  syncAll();
+  toast(q.client+' confirmed — moved to pipeline');
+}
+
 // Track current calendar month for sync
 let currentCalMonth=4;
 
@@ -2246,6 +2485,91 @@ function setHTf(el,tf){
   if(st('h-cbar'))st('h-cbar').style.width=d.cw;
   if(st('h-reading'))st('h-reading').textContent=d.r;
   if(st('htf-lbl'))st('htf-lbl').textContent=d.l;
+  renderHorizonLine(tf);
+  renderHorizonQuotes();
+}
+
+// ─── HORIZON LINE OVERLAY ───────────────────────────
+// Per-timeframe line path + dot positions + label values
+// Path echoes mountain terrain loosely — fixed terrain shape, labels shift
+const htfLine={
+  '3m':{
+    path:'M 28 192 C 55 178, 80 158, 105 148 C 128 138, 148 152, 172 142 C 196 132, 218 120, 248 130 C 272 138, 298 148, 332 144',
+    dots:[{x:28,y:192},{x:105,y:148},{x:210,y:133},{x:332,y:144}],
+    labels:['Momentum','Confirmed','Pipeline','Savings'],
+    vals:()=>{
+      const r=received.reduce((a,i)=>a+i.amount,0);
+      const s=sent.reduce((a,i)=>a+i.amount,0);
+      const a=ahead.reduce((a,i)=>a+i.amount,0);
+      const total=r+s+a||1;
+      const mom=Math.round(Math.min(100,(r/total)*100));
+      return[mom+'%','£'+r.toLocaleString(),'£'+a.toLocaleString(),'£8,200'];
+    }
+  },
+  '6m':{
+    path:'M 28 196 C 60 188, 90 170, 115 155 C 140 140, 162 148, 188 136 C 212 124, 238 112, 268 118 C 295 124, 315 132, 332 128',
+    dots:[{x:28,y:196},{x:115,y:155},{x:215,y:127},{x:332,y:128}],
+    labels:['Momentum','Confirmed','Pipeline','Savings'],
+    vals:()=>{
+      const r=received.reduce((a,i)=>a+i.amount,0);
+      const a=ahead.reduce((a,i)=>a+i.amount,0);
+      return['Building','£'+r.toLocaleString(),'£'+(a*1.4).toLocaleString().split('.')[0],'£8,200'];
+    }
+  },
+  '1y':{
+    path:'M 28 200 C 65 192, 100 178, 130 162 C 158 148, 180 142, 208 130 C 232 120, 258 108, 288 112 C 310 116, 322 122, 332 118',
+    dots:[{x:28,y:200},{x:130,y:162},{x:218,y:123},{x:332,y:118}],
+    labels:['Momentum','Income','Pipeline','Savings target'],
+    vals:()=>['Stable','£14,600','Rising','£15k'],
+  },
+  '3y':{
+    path:'M 28 204 C 70 198, 110 186, 145 170 C 175 156, 200 138, 230 122 C 258 108, 284 100, 310 104 C 322 106, 328 110, 332 108',
+    dots:[{x:28,y:204},{x:145,y:170},{x:232,y:119},{x:332,y:108}],
+    labels:['Now','Mid-path','Pipeline','Vision'],
+    vals:()=>['Current','Trajectory','Building','£38k+'],
+  },
+  '5y':{
+    path:'M 28 208 C 72 204, 115 194, 152 178 C 185 163, 212 140, 242 118 C 268 98, 296 90, 320 96 C 328 98, 331 100, 332 100',
+    dots:[{x:28,y:208},{x:152,y:178},{x:248,y:112},{x:332,y:100}],
+    labels:['Now','Mid-path','Direction','Vision'],
+    vals:()=>['Current','Strategic','Upward','£55k+'],
+  }
+};
+
+function renderHorizonLine(tf){
+  const cfg=htfLine[tf]||htfLine['3m'];
+  const vals=cfg.vals();
+  const p=document.getElementById('h-line-path');
+  if(p)p.setAttribute('d',cfg.path);
+  cfg.dots.forEach((d,i)=>{
+    const dot=document.getElementById('h-dot-'+i);
+    if(dot){dot.setAttribute('cx',d.x);dot.setAttribute('cy',d.y);}
+    const lt=document.getElementById('h-lbl-title-'+i);
+    const lv=document.getElementById('h-lbl-val-'+i);
+    const lg=document.getElementById('h-label-'+i);
+    if(lt)lt.setAttribute('x',d.x);
+    if(lv)lv.setAttribute('x',d.x);
+    if(lg){
+      const yOff=d.y>100?-10:-9;
+      lt?.setAttribute('y',d.y+yOff);
+      lv?.setAttribute('y',d.y+yOff-10);
+    }
+    if(lt)lt.textContent=cfg.labels[i]||'';
+    if(lv)lv.textContent=vals[i]||'';
+  });
+}
+
+function renderHorizonQuotes(){
+  const card=document.getElementById('h-quotes-card');
+  const amt=document.getElementById('h-quotes-amt');
+  const txt=document.getElementById('h-quotes-text');
+  if(!card)return;
+  if(!quotes||quotes.length===0){card.style.display='none';return;}
+  const total=quotes.reduce((a,q)=>a+q.amount,0);
+  const count=quotes.length;
+  card.style.display='block';
+  if(amt)amt.textContent='£'+Math.round(total).toLocaleString();
+  if(txt)txt.textContent=`You have ${count} quote${count>1?'s':''} out. If confirmed, ${count>1?'they':'it'} would add to your pipeline and strengthen your Horizon.`;
 }
 
 // ─── ONBOARDING ─────────────────────────────────────
@@ -2443,832 +2767,11 @@ function syncAll(){
 
 // ─── INIT ────────────────────────────────────────────
 const today=new Date().toISOString().split('T')[0];
-['f-issue','f-due','ev-date'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=today;});
+['f-issue','f-due','ev-date','q-date'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=today;});
 const d14=new Date();d14.setDate(d14.getDate()+14);
 const fd=document.getElementById('f-due');if(fd)fd.value=d14.toISOString().split('T')[0];
 recalc();renderInvList('all');renderCal(4);
 </script>
 
-<!-- INVOICE PROMPT MODAL — lean sync: offered after adding billable event -->
-<div class="modal-bg" id="m-inv-prompt" onclick="if(event.target===this)dismissInvoicePrompt()">
-<div class="modal" onclick="event.stopPropagation()" style="padding:22px 22px 40px">
-  <div class="m-handle"></div>
-  <!-- Lean signal icon -->
-  <div style="width:52px;height:52px;border-radius:16px;background:var(--sage3);display:flex;align-items:center;justify-content:center;margin-bottom:16px">
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--sage)" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-  </div>
-  <div style="font-size:var(--text-lg);font-weight:600;color:var(--text);margin-bottom:6px">Create a draft invoice?</div>
-  <div style="font-size:13px;color:var(--ink-3);line-height:1.7;margin-bottom:20px">You've added a billable gig for <strong id="ip-client" style="color:var(--text);font-weight:600"></strong> worth <strong id="ip-amount" style="color:var(--text);font-weight:600"></strong>. A draft invoice is ready — one tap to open it pre-filled and ready to send.</div>
-  
-  <!-- What gets pre-filled preview -->
-  <div style="background:var(--surface-2);border-radius:var(--r2);padding:14px;margin-bottom:18px">
-    <div style="font-size:var(--text-xs);color:var(--ink-3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px;font-weight:500">Pre-filled for you</div>
-    <div style="display:flex;flex-direction:column;gap:6px">
-      <div style="display:flex;gap:8px;font-size:13px"><span style="color:var(--ink-3);width:64px;flex-shrink:0">Client</span><span style="color:var(--text);font-weight:500" id="ip-client2"></span></div>
-      <div style="display:flex;gap:8px;font-size:13px"><span style="color:var(--ink-3);width:64px;flex-shrink:0">Work</span><span style="color:var(--ink-1)" id="ip-desc"></span></div>
-      <div style="display:flex;gap:8px;font-size:13px"><span style="color:var(--ink-3);width:64px;flex-shrink:0">Amount</span><span style="color:var(--text);font-weight:600" id="ip-amount2"></span></div>
-    </div>
-  </div>
-
-  <button class="btn btn-sage" onclick="createDraftFromEvent()" style="margin-bottom:8px">
-    <span style="display:flex;align-items:center;justify-content:center;gap:8px">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-      Open pre-filled invoice
-    </span>
-  </button>
-  <button class="btn btn-ghost" onclick="dismissInvoicePrompt()">Not yet — I'll do it later</button>
-  
-  <div style="text-align:center;margin-top:12px;font-size:var(--text-xs);color:var(--ink-3);line-height:1.6">This is the lean approach — the gig is already synced to Momentum and Horizon. The invoice is the last step.</div>
-</div></div>
-
-<!-- DEV / TEST PANEL -->
-<div class="modal-bg" id="m-dev" onclick="if(event.target===this)closeModal('m-dev')">
-<div class="dev-panel" onclick="event.stopPropagation()">
-  <div class="m-handle" style="background:rgba(255,255,255,0.15)"></div>
-  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
-    <div>
-      <div style="font-size:16px;font-weight:600;color:#fff;letter-spacing:-0.02em">Developer Panel <span class="dev-tag">Test mode</span></div>
-      <div style="font-size:12px;color:rgba(255,255,255,0.38);margin-top:3px">Edit values and watch the app respond in real time</div>
-    </div>
-  </div>
-
-  <!-- INCOME EDITOR -->
-  <div class="dev-section">
-    <div class="dev-section-title">Income data — edit any value</div>
-    <div id="dev-income-rows"></div>
-    <button class="dev-btn dev-btn-coral" style="width:100%;margin-top:8px" onclick="addDevIncome()">+ Add income entry</button>
-  </div>
-
-  <!-- QUICK SCENARIOS -->
-  <div class="dev-section">
-    <div class="dev-section-title">Quick scenarios</div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-      <button class="dev-btn dev-btn-ghost-light" onclick="loadScenario('strong')">Strong month</button>
-      <button class="dev-btn dev-btn-ghost-light" onclick="loadScenario('quiet')">Quiet period</button>
-      <button class="dev-btn dev-btn-ghost-light" onclick="loadScenario('building')">Building back</button>
-      <button class="dev-btn dev-btn-ghost-light" onclick="loadScenario('empty')">Empty / new user</button>
-    </div>
-  </div>
-
-  <!-- PIPELINE CONFIDENCE -->
-  <div class="dev-section">
-    <div class="dev-section-title">Pipeline confidence — affects Horizon</div>
-    <div style="display:flex;gap:6px;flex-wrap:wrap">
-      <button class="dev-btn dev-btn-ghost-light" id="pc-strong" onclick="setPipelineConf('strong')">Strong</button>
-      <button class="dev-btn dev-btn-ghost-light" id="pc-moderate" onclick="setPipelineConf('moderate')">Moderate</button>
-      <button class="dev-btn dev-btn-ghost-light" id="pc-uncertain" onclick="setPipelineConf('uncertain')">Uncertain</button>
-    </div>
-    <div style="font-size:11px;color:rgba(255,255,255,0.30);margin-top:8px" id="dev-conf-note">Affects Horizon scenario range and signal clarity bar</div>
-  </div>
-
-  <!-- DATA STATE -->
-  <div class="dev-section">
-    <div class="dev-section-title">Current data state</div>
-    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px">
-      <button class="dev-btn dev-btn-ghost-light" onclick="toggleDevJson()">View raw JSON</button>
-      <button class="dev-btn dev-btn-danger" onclick="resetToDemo()">Reset to demo</button>
-      <button class="dev-btn dev-btn-danger" onclick="resetToEmpty()">Clear all data</button>
-    </div>
-    <div id="dev-json-view" style="display:none"></div>
-    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:8px">
-      <div style="background:rgba(255,255,255,0.06);border-radius:8px;padding:10px;text-align:center">
-        <div style="font-size:18px;font-weight:700;color:#fff;letter-spacing:-0.03em" id="dev-stat-recv">-</div>
-        <div style="font-size:10px;color:rgba(255,255,255,0.35);margin-top:2px">Received</div>
-      </div>
-      <div style="background:rgba(255,255,255,0.06);border-radius:8px;padding:10px;text-align:center">
-        <div style="font-size:18px;font-weight:700;color:#fff;letter-spacing:-0.03em" id="dev-stat-sent">-</div>
-        <div style="font-size:10px;color:rgba(255,255,255,0.35);margin-top:2px">Sent</div>
-      </div>
-      <div style="background:rgba(255,255,255,0.06);border-radius:8px;padding:10px;text-align:center">
-        <div style="font-size:18px;font-weight:700;color:#fff;letter-spacing:-0.03em" id="dev-stat-ahead">-</div>
-        <div style="font-size:10px;color:rgba(255,255,255,0.35);margin-top:2px">Pipeline</div>
-      </div>
-    </div>
-  </div>
-
-  <button class="btn btn-ghost" style="width:100%;color:rgba(255,255,255,0.50);border-color:rgba(255,255,255,0.15);margin-top:4px" onclick="closeModal('m-dev')">Close panel</button>
-</div>
-</div>
-</body>
-</html><!-- ════════ MENU OVERLAY — refined ════════ -->
-<div class="modal-bg" id="menu-overlay" onclick="if(event.target===this)closeMenu()">
-  <div class="modal" onclick="event.stopPropagation()" style="padding:20px 0 48px;border-radius:28px 28px 0 0">
-    <div class="m-handle" style="margin-bottom:0"></div>
-    <div style="display:flex;align-items:center;gap:14px;padding:16px 24px 16px;border-bottom:1px solid var(--line-lo)">
-      <div style="width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,var(--coral-lo),var(--gold-lo));display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;color:var(--coral);flex-shrink:0">IM</div>
-      <div style="flex:1"><div style="font-size:16px;font-weight:600;color:var(--ink-1);letter-spacing:-0.02em">Iain Morley</div><div style="font-size:12px;color:var(--ink-3);margin-top:1px">Musician · Liverpool</div></div>
-      <div style="font-size:15px;font-weight:700;color:var(--coral);letter-spacing:-0.04em">Slf:mde</div>
-    </div>
-    <div style="padding:0 24px;overflow-y:auto;max-height:68vh">
-
-      <div style="padding:14px 0 6px">
-        <div class="menu-sec-lbl">Account</div>
-        <button class="menu-row" onclick="showSec('profile','s-momentum')"><div class="mi-box" style="background:var(--gold-lo)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg></div><span class="menu-row-label">Profile</span><span class="menu-arrow">›</span></button>
-        <button class="menu-row" onclick="showSec('business','s-momentum')"><div class="mi-box" style="background:var(--coral-lo)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--coral)" stroke-width="1.8"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/></svg></div><span class="menu-row-label">Business Details</span><span class="menu-arrow">›</span></button>
-        <button class="menu-row" onclick="showSec('goals','s-momentum')"><div class="mi-box" style="background:var(--dusk-lo)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--dusk)" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></div><span class="menu-row-label">Goals & Financial Targets</span><span class="menu-arrow">›</span></button>
-        <button class="menu-row" onclick="showSec('savings','s-momentum')"><div class="mi-box" style="background:var(--teal-lo)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" stroke-width="1.8"><path d="M12 2a10 10 0 110 20A10 10 0 0112 2z"/><path d="M12 6v6l4 2"/></svg></div><span class="menu-row-label">Savings & Pension</span><span class="menu-arrow">›</span></button>
-      </div>
-
-      <div style="padding:6px 0;border-top:1px solid var(--line-lo)">
-        <div class="menu-sec-lbl" style="margin-top:10px">Business Tools</div>
-        <button class="menu-row" onclick="showSec('assets','s-momentum')"><div class="mi-box" style="background:var(--sand-lo)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--sand)" stroke-width="1.8"><path d="M3 3h7v7H3zM14 3h7v7h-7zM14 14h7v7h-7zM3 14h7v7H3z"/></svg></div><span class="menu-row-label">Assets Library</span><span class="menu-arrow">›</span></button>
-        <button class="menu-row" onclick="showSec('contacts','s-momentum')"><div class="mi-box" style="background:var(--sage-lo)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--sage)" stroke-width="1.8"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></div><span class="menu-row-label">Business Contacts</span><span class="menu-arrow">›</span></button>
-        <button class="menu-row" onclick="showSec('card','s-momentum')"><div class="mi-box" style="background:var(--dusk-lo)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--dusk)" stroke-width="1.8"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg></div><span class="menu-row-label">Digital Contact Card</span><span class="menu-arrow">›</span></button>
-      </div>
-
-      <div style="padding:6px 0;border-top:1px solid var(--line-lo)">
-        <div class="menu-sec-lbl" style="margin-top:10px">Growth</div>
-        <button class="menu-row" onclick="showSec('marketing','s-momentum')"><div class="mi-box" style="background:var(--coral-lo)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--coral)" stroke-width="1.8"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/></svg></div><span class="menu-row-label">Marketing Tools</span><span class="menu-cs-badge">Soon</span></button>
-        <button class="menu-row" onclick="showSec('opportunity','s-momentum')"><div class="mi-box" style="background:var(--dusk-lo)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--dusk)" stroke-width="1.8"><path d="M18 20V10M12 20V4M6 20v-6"/></svg></div><span class="menu-row-label">Opportunity</span><span class="menu-cs-badge">Soon</span></button>
-      </div>
-
-      <div style="padding:6px 0;border-top:1px solid var(--line-lo)">
-        <div class="menu-sec-lbl" style="margin-top:10px">Connections</div>
-        <button class="menu-row" onclick="showSec('banking','s-momentum')"><div class="mi-box" style="background:var(--teal-lo)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" stroke-width="1.8"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></div><span class="menu-row-label">Open Banking</span><span class="menu-cs-badge">Soon</span></button>
-        <button class="menu-row" onclick="showSec('hmrc','s-momentum')"><div class="mi-box" style="background:var(--sage-lo)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--sage)" stroke-width="1.8"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div><span class="menu-row-label">HMRC / Making Tax Digital</span><span class="menu-cs-badge">Soon</span></button>
-        <button class="menu-row" onclick="showSec('smartinbox','s-momentum')"><div class="mi-box" style="background:var(--gold-lo)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.8"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div><span class="menu-row-label">Smart Inbox</span><span class="menu-cs-badge">Soon</span></button>
-      </div>
-
-      <div style="padding:6px 0;border-top:1px solid var(--line-lo)">
-        <div class="menu-sec-lbl" style="margin-top:10px">Settings</div>
-        <button class="menu-row" onclick="showSec('settings','s-momentum')"><div class="mi-box" style="background:var(--surf-3)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--ink-2)" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06-.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg></div><span class="menu-row-label">Settings</span><span class="menu-arrow">›</span></button>
-        <button class="menu-row" style="border-bottom:none" onclick="showSec('help','s-momentum')"><div class="mi-box" style="background:var(--surf-3)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--ink-2)" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div><span class="menu-row-label">Help & Support</span><span class="menu-arrow">›</span></button>
-      </div>
-
-    </div>
-  </div>
-</div>
-
-<!-- CASH MODAL -->
-<div class="modal-bg" id="m-cash" onclick="if(event.target===this)closeModal('m-cash')">
-<div class="modal" onclick="event.stopPropagation()">
-  <div class="m-handle"></div>
-  <div class="m-title">Log Cash Received</div>
-  <div class="m-sub">Cash received is added to your confirmed income right away — it strengthens your Momentum reading immediately.</div>
-  <div class="ig"><label class="il">Received from</label><input class="inp" type="text" placeholder="Client or person" id="c-from"/></div>
-  <div class="ig"><label class="il">What for</label><input class="inp" type="text" placeholder="e.g. Photography session" id="c-for"/></div>
-  <div class="ig"><label class="il">Amount</label><input class="inp" type="number" placeholder="0" id="c-amt" style="font-weight:700;font-size:20px"/></div>
-  <button class="btn btn-cash" style="margin-top:4px" onclick="logCash()">Log Cash Payment</button>
-  <button class="btn btn-ghost" style="margin-top:8px" onclick="closeModal('m-cash')">Cancel</button>
-</div></div>
-
-<!-- EVENT MODAL -->
-<div class="modal-bg" id="m-event" onclick="if(event.target===this)closeModal('m-event')">
-<div class="modal" onclick="event.stopPropagation()">
-  <div class="m-handle"></div>
-  <div class="m-title">Add Gig or Booking</div>
-  <div class="m-sub">Adding a billable event syncs instantly with Momentum, Horizon and Invoices — one entry, everything updates.</div>
-  <div class="ig"><label class="il">Event / gig name</label><input class="inp" type="text" placeholder="e.g. Photography session — Acme" id="ev-name"/></div>
-  <div class="ig"><label class="il">Client name</label><input class="inp" type="text" placeholder="e.g. Studio North" id="ev-client"/></div>
-  <div class="irow">
-    <div class="ig"><label class="il">Date</label><input class="inp" type="date" id="ev-date"/></div>
-    <div class="ig"><label class="il">Fee (£)</label><input class="inp" type="number" placeholder="0" id="ev-val" style="font-weight:700"/></div>
-  </div>
-  <div style="background:var(--dusk3);border-radius:var(--r3);padding:10px 12px;margin-bottom:var(--space-3);font-size:12px;color:var(--dusk);line-height:1.6">If you add a fee, you'll be offered a pre-filled draft invoice — one tap, ready to send.</div>
-  <button class="btn btn-primary" style="background:var(--dusk);box-shadow:0 4px 16px rgba(139,126,200,.28);margin-top:4px" onclick="addEvent()">Add to Pipeline</button>
-  <button class="btn btn-ghost" style="margin-top:8px" onclick="closeModal('m-event')">Cancel</button>
-</div></div>
-
-<script>
-// ─── DATA ──────────────────────────────────────────
-let received=[
-  {id:'r1',client:'BBC Session',desc:'Audio production — May',amount:1200,date:'15 Apr',type:'cash',status:'received'},
-  {id:'r2',client:'Tom Hadley',desc:'Headshots — cash',amount:350,date:'2 Apr',type:'cash',status:'received'},
-  {id:'r3',client:'Workshop fee',desc:'Saturday session',amount:450,date:'1 Apr',type:'cash',status:'received'},
-];
-let sent=[
-  {id:'s1',client:'Studio North',desc:'Brand identity project',amount:450,date:'Due 20 Apr',status:'sent'},
-  {id:'s2',client:'Festival Gig',desc:'Performance fee',amount:900,date:'Due 10 Apr',status:'attention'},
-  {id:'s3',client:'Nova Agency',desc:'Strategy consultation',amount:600,date:'Due 28 Apr',status:'sent'},
-];
-let ahead=[
-  {id:'a1',client:'Brighter Labs',desc:'Kick-off shoot day',amount:800,date:'7 Apr',status:'ahead'},
-  {id:'a2',client:'Flux Creative',desc:'Brand photography',amount:620,date:'9 Apr',status:'ahead'},
-  {id:'a3',client:'Nova Agency',desc:'Consultation follow-up',amount:780,date:'14 Apr',status:'ahead'},
-];
-let lineItems=[];
-let secFrom='s-momentum';
-
-// ─── NAV ───────────────────────────────────────────
-function go(id){
-  document.querySelectorAll('.screen').forEach(s=>{s.classList.remove('active');s.style.display='none'});
-  const el=document.getElementById(id);
-  if(el){el.style.display='flex';el.classList.add('active');}
-  if(id==='s-invoices'){renderInvList('all');recalc();}
-  if(id==='s-inv-c4')buildPreview();
-  if(id==='s-calendar')renderCal(4);
-  window.scrollTo(0,0);
-}
-function openMenu(){document.getElementById('menu-overlay').classList.add('open');}
-function closeMenu(){document.getElementById('menu-overlay').classList.remove('open');}
-function openModal(id){document.getElementById(id).classList.add('open');}
-function closeModal(id){document.getElementById(id).classList.remove('open');}
-
-// ─── SECONDARY PAGES ───────────────────────────────
-const secPages={
-  profile:{title:'Profile',html:`<div class="slabel" style="margin-top:0">Your identity</div><div class="ig"><label class="il">Full name</label><input class="inp" value="Iain Morley"/></div><div class="ig"><label class="il">Profession</label><input class="inp" value="Musician"/></div><div class="ig"><label class="il">Location</label><input class="inp" value="Liverpool"/></div><div class="ig"><label class="il">Bio</label><textarea class="ta" rows="3">Freelance musician and composer based in Liverpool. Specialising in session work, live performance, and original composition.</textarea></div><div class="slabel">Contact</div><div class="ig"><label class="il">Email</label><input class="inp" value="iain@morleymusic.co.uk"/></div><div class="ig"><label class="il">Phone</label><input class="inp" value="+44 7700 900123"/></div><div class="ig"><label class="il">Website</label><input class="inp" value="morleymusic.co.uk"/></div><button class="btn btn-primary" style="margin-top:4px" onclick="toast('Profile saved ✓')">Save Profile</button>`},
-  business:{title:'Business Details',html:`<div class="slabel" style="margin-top:0">Trading information</div><div class="ig"><label class="il">Trading name</label><input class="inp" value="Iain Morley Music"/></div><div class="ig"><label class="il">Business type</label><select class="sel"><option selected>Sole trader</option><option>Limited company</option></select></div><div class="irow"><div class="ig"><label class="il">UTR</label><input class="inp" placeholder="10 digits"/></div><div class="ig"><label class="il">VAT</label><input class="inp" placeholder="Optional"/></div></div><div class="slabel">Work model</div><div class="ig"><label class="il">Primary income type</label><select class="sel"><option>Project-based</option><option selected>Mix of project + retainer</option><option>Retainer / recurring</option></select></div><div class="ig"><label class="il">Typical day rate (£)</label><input class="inp" type="number" placeholder="e.g. 350" style="font-weight:700"/></div><div class="ig"><label class="il">Monthly target (£)</label><input class="inp" type="number" placeholder="e.g. 3500" style="font-weight:700"/></div><button class="btn btn-primary" style="margin-top:4px" onclick="toast('Saved ✓')">Save Business Details</button>`},
-  goals:{title:'Goals & Targets',html:`<div class="slabel" style="margin-top:0">Your targets</div>${[['Monthly income target','£3,500',82,'var(--sage),var(--sage2)','On track'],['Annual income goal','£42,000',58,'var(--sand),var(--sand2)','Progressing'],['Cash buffer target','£8,000',45,'var(--dusk),var(--dusk2)','Building']].map(([l,t,p,c,s])=>`<div class="goal-card"><div style="display:flex;justify-content:space-between;margin-bottom:4px"><div style="font-size:var(--text-sm);font-weight:500;color:var(--ink-1)">${l}</div><div class="money" style="font-size:var(--text-base);color:var(--ink-1)">${t}</div></div><div class="gbar"><div class="gfill" style="width:${p}%;background:linear-gradient(90deg,${c})"></div></div><div style="display:flex;justify-content:space-between;font-size:var(--text-xs);color:var(--ink-3)"><span>${s}</span><span>${p}%</span></div></div>`).join('')}<div class="slabel">Add target</div><div class="ig"><label class="il">Target name</label><input class="inp" placeholder="e.g. Equipment fund"/></div><div class="irow"><div class="ig"><label class="il">Amount (£)</label><input class="inp" type="number" placeholder="0" style="font-weight:700"/></div><div class="ig"><label class="il">By when</label><input class="inp" type="date"/></div></div><button class="btn" style="background:var(--dusk);color:#fff;border-radius:var(--r2);padding:13px;border:none;cursor:pointer;margin-top:4px;width:100%;font-weight:600" onclick="toast('Target added ✓')">Add Target</button>`},
-  savings:{title:'Savings & Pension',html:`<div class="slabel" style="margin-top:0">Emergency fund</div><div class="goal-card"><div style="display:flex;justify-content:space-between;margin-bottom:4px"><div style="font-size:var(--text-sm);font-weight:500;color:var(--ink-1)">Savings buffer</div><div class="money" style="font-size:var(--text-base);color:var(--ink-1)">£8,200</div></div><div class="gbar"><div class="gfill" style="width:55%;background:linear-gradient(90deg,var(--coral2),var(--coral3))"></div></div><div style="font-size:var(--text-xs);color:var(--ink-3)">55% of £15k target</div></div><div class="ig" style="margin-top:10px"><label class="il">Monthly contribution (£)</label><input class="inp" type="number" placeholder="e.g. 400" style="font-weight:700"/></div><div class="slabel">Pension / SIPP</div><div class="goal-card"><div style="display:flex;justify-content:space-between;margin-bottom:4px"><div style="font-size:var(--text-sm);font-weight:500;color:var(--ink-1)">SIPP contributions</div><div class="money" style="font-size:var(--text-base);color:var(--ink-1)">£300/mo</div></div><div class="gbar"><div class="gfill" style="width:38%;background:linear-gradient(90deg,var(--teal),var(--teal2))"></div></div><div style="font-size:var(--text-xs);color:var(--ink-3)">Annual: £3,600 · tax relief applied</div></div><div class="ig" style="margin-top:10px"><label class="il">SIPP provider</label><input class="inp" placeholder="e.g. Vanguard"/></div><div class="ig"><label class="il">Monthly contribution (£)</label><input class="inp" type="number" value="300" style="font-weight:700"/></div><button class="btn btn-primary" style="margin-top:4px" onclick="toast('Saved ✓')">Save</button>`},
-  assets:{title:'Assets Library',html:`<div class="slabel" style="margin-top:0">Your files</div><div style="background:var(--surface-1);border:1px solid var(--line-lo);border-radius:var(--r2);padding:0 14px">${[['Press kit 2026.pdf','PDF · Updated Mar 2026','2.4 MB','📄'],['Press photos — 2025','Folder · 12 images','38 MB','🖼'],['Demo track — 2026','MP3 · 4m 12s','9.8 MB','🎵'],['Standard rider.docx','Document','84 KB','📝']].map(([n,m,s,i])=>`<div class="asset-item"><div class="asset-thumb">${i}</div><div style="flex:1"><div style="font-size:var(--text-sm);font-weight:500;color:var(--ink-1)">${n}</div><div style="font-size:12px;color:var(--ink-3)">${m}</div></div><div style="font-size:12px;color:var(--ink-3)">${s}</div></div>`).join('')}</div><button class="btn btn-primary" style="margin-top:12px;background:var(--sand)" onclick="toast('Upload coming soon')">+ Upload Asset</button>`},
-  contacts:{title:'Business Contacts',html:`<div class="slabel" style="margin-top:0">Your network</div><div style="background:var(--surface-1);border:1px solid var(--line-lo);border-radius:var(--r2);padding:0 14px">${[['BBC Music','Commissioning editor','#E8614A'],['Meridian Studio','Art director','#3AADA0'],['Flux Creative','Producer','#8B7EC8'],['Festival North','Bookings','#C4A882']].map(([n,r,c])=>`<div class="asset-item"><div style="width:40px;height:40px;border-radius:10px;background:${c}22;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:${c};flex-shrink:0">${n[0]}</div><div style="flex:1"><div style="font-size:var(--text-sm);font-weight:500;color:var(--ink-1)">${n}</div><div style="font-size:12px;color:var(--ink-3)">${r}</div></div></div>`).join('')}</div><button class="btn btn-primary" style="margin-top:12px" onclick="toast('Contact added ✓')">+ Add Contact</button>`},
-  card:{title:'Digital Contact Card',html:`<div class="slabel" style="margin-top:0">Your card</div><div style="background:linear-gradient(135deg,#1E1810,#2d1855);border-radius:var(--r);padding:22px;margin-bottom:var(--space-4)"><div style="font-size:22px;font-weight:700;color:#fff;margin-bottom:4px;letter-spacing:-0.03em">Iain Morley</div><div style="font-size:13px;color:rgba(255,255,255,.55);margin-bottom:16px">Musician · Liverpool</div><div style="font-size:13px;color:rgba(255,255,255,.65);margin-bottom:5px">✉ iain@morleymusic.co.uk</div><div style="font-size:13px;color:rgba(255,255,255,.65);margin-bottom:var(--space-4)">🌐 morleymusic.co.uk</div><div style="display:flex;gap:8px"><span style="padding:5px 12px;background:rgba(255,255,255,.12);border-radius:20px;font-size:12px;color:rgba(255,255,255,.7)">Session musician</span><span style="padding:5px 12px;background:rgba(255,255,255,.12);border-radius:20px;font-size:12px;color:rgba(255,255,255,.7)">Composer</span></div></div><div class="ig"><label class="il">Tagline</label><input class="inp" placeholder="A short line about your work"/></div><div class="ig"><label class="il">Tags</label><input class="inp" value="Session musician, Composer, Live"/></div><button class="btn btn-primary" style="margin-top:4px" onclick="toast('Card saved ✓')">Save & Share Card</button><button class="btn btn-ghost" style="margin-top:8px" onclick="toast('Link copied ✓')">Copy card link</button>`},
-  marketing:{title:'Marketing Tools',html:`<div class="coming-wrap"><div class="coming-icon" style="background:var(--coral3)"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="var(--coral)" stroke-width="1.8"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></div><div style="font-size:22px;font-weight:700;color:var(--text);margin-bottom:10px;letter-spacing:-0.02em">Marketing Tools</div><div style="font-size:var(--text-sm);color:var(--ink-2);line-height:1.75;margin-bottom:20px">Tools to help you grow your profile, manage your presence, and reach new clients — built around how creative freelancers actually work.</div><span class="tag t-soon" style="padding:8px 18px;font-size:13px">In development</span><div class="coming-detail"><div class="cd-item"><div class="cd-dot" style="background:var(--coral)"></div>Portfolio showcase — share your work beautifully</div><div class="cd-item"><div class="cd-dot" style="background:var(--gold)"></div>Proposal builder — calm, professional project proposals</div><div class="cd-item"><div class="cd-dot" style="background:var(--teal)"></div>Availability broadcasting</div><div class="cd-item"><div class="cd-dot" style="background:var(--dusk)"></div>Testimonial collection</div></div></div>`},
-  opportunity:{title:'Opportunity',html:`<div class="coming-wrap"><div class="coming-icon" style="background:var(--dusk3)"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="var(--dusk)" stroke-width="1.8"><path d="M18 20V10M12 20V4M6 20v-6"/></svg></div><div style="font-size:22px;font-weight:700;color:var(--text);margin-bottom:10px;letter-spacing:-0.02em">Opportunity</div><div style="font-size:var(--text-sm);color:var(--ink-2);line-height:1.75;margin-bottom:20px">A curated feed of relevant work opportunities — matched to your skills, location, and availability. No noise, just signal.</div><span class="tag t-soon" style="padding:8px 18px;font-size:13px">Coming soon</span><div class="coming-detail"><div class="cd-item"><div class="cd-dot" style="background:var(--dusk)"></div>Matched to your work type and location</div><div class="cd-item"><div class="cd-dot" style="background:var(--coral)"></div>Connects to your calendar availability automatically</div><div class="cd-item"><div class="cd-dot" style="background:var(--gold)"></div>Partnership integrations planned — venues, studios, agencies</div></div></div>`},
-  settings:{title:'Settings',html:`
-  <div style="background:linear-gradient(135deg,rgba(30,24,16,0.95),rgba(30,24,16,0.98));border-radius:var(--r2);padding:16px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;cursor:pointer" onclick="closeMenu();go('s-secondary');openDevPanel()">
-    <div>
-      <div style="font-size:14px;font-weight:600;color:#fff;letter-spacing:-0.01em">Developer / Test Panel</div>
-      <div style="font-size:12px;color:rgba(255,255,255,0.42);margin-top:2px">Edit values · test scenarios · view data state</div>
-    </div>
-    <div style="background:rgba(232,168,32,0.20);border:1px solid rgba(232,168,32,0.35);border-radius:999px;padding:4px 11px;font-size:10px;font-weight:600;color:rgba(232,168,32,0.90);flex-shrink:0">Dev</div>
-  </div>
-  <div class="slabel" style="margin-top:0">Notifications</div><div style="background:var(--surface-1);border:1px solid var(--line-lo);border-radius:var(--r2);padding:0 16px">${[['Weekly Momentum digest','A quiet summary every Monday',true],['Invoice follow-up nudges','Gentle reminders for outstanding items',true],['Horizon updates','When your outlook shifts meaningfully',false],['New features','Product updates and improvements',true]].map(([l,s,on])=>`<div class="set-row"><div style="flex:1"><div style="font-size:var(--text-sm);color:var(--text);font-weight:500">${l}</div><div style="font-size:12px;color:var(--ink-3);margin-top:1px">${s}</div></div><button class="toggle ${on?'on':''}" onclick="this.classList.toggle('on')"></button></div>`).join('')}</div><div class="slabel">Preferences</div><div style="background:var(--surface-1);border:1px solid var(--line-lo);border-radius:var(--r2);padding:0 16px"><div class="set-row"><div style="flex:1"><div style="font-size:var(--text-sm);color:var(--text);font-weight:500">Currency</div></div><select class="sel" style="border:none;padding:12px 0;font-size:var(--text-sm);color:var(--text);background:transparent;width:auto"><option>£ GBP</option><option>€ EUR</option><option>$ USD</option></select></div></div><div class="slabel">Reading & Display</div><div style="background:var(--surface-1);border:1px solid var(--line-lo);border-radius:var(--r2);overflow:hidden"><button class="menu-row" style="padding:13px 0;border-bottom:none" onclick="go('s-display')"><span style="font-size:var(--text-base);color:var(--text);flex:1">Font, spacing & colour overlay</span><span style="color:var(--ink-3);font-size:var(--text-lg)">›</span></button></div><button class="btn btn-primary" style="margin-top:12px" onclick="toast('Settings saved ✓')">Save Settings</button>`},
-  banking:{title:'Open Banking',html:`<div class="coming-wrap"><div class="coming-icon" style="background:var(--teal-lo)"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" stroke-width="1.8"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></div><div style="font-size:22px;font-weight:700;color:var(--ink-1);margin-bottom:10px;letter-spacing:-0.03em">Open Banking</div><div style="font-size:14px;color:var(--ink-2);line-height:1.75;margin-bottom:20px">Connect your bank account and Slf:mde will read your transactions automatically — no manual cash entry, real-time Momentum updates, and a complete financial picture without lifting a finger.</div><span class="tag t-soon" style="padding:8px 18px;font-size:13px">Coming in Version 3</span><div class="coming-detail"><div class="cd-item"><div class="cd-dot" style="background:var(--teal)"></div>Live transaction feed — income appears in Momentum instantly</div><div class="cd-item"><div class="cd-dot" style="background:var(--coral)"></div>Automatic categorisation of client payments vs expenses</div><div class="cd-item"><div class="cd-dot" style="background:var(--gold)"></div>Zero manual entry — the system reads what your bank already knows</div><div class="cd-item"><div class="cd-dot" style="background:var(--dusk)"></div>FCA-regulated Open Banking API — your data stays yours</div></div></div>`},
-  hmrc:{title:'HMRC / Making Tax Digital',html:`<div class="coming-wrap"><div class="coming-icon" style="background:var(--sage-lo)"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="var(--sage)" stroke-width="1.8"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div><div style="font-size:22px;font-weight:700;color:var(--ink-1);margin-bottom:10px;letter-spacing:-0.03em">HMRC / Making Tax Digital</div><div style="font-size:14px;color:var(--ink-2);line-height:1.75;margin-bottom:20px">Slf:mde builds your self-assessment from your income data as you go — so when January comes, your return is already prepared. No scrambling, no missed deductions.</div><span class="tag t-soon" style="padding:8px 18px;font-size:13px">Coming in Version 3</span><div class="coming-detail"><div class="cd-item"><div class="cd-dot" style="background:var(--sage)"></div>Self-assessment pre-populated from your Slf:mde income data</div><div class="cd-item"><div class="cd-dot" style="background:var(--coral)"></div>MTD-compliant quarterly updates submitted automatically</div><div class="cd-item"><div class="cd-dot" style="background:var(--gold)"></div>Institution-legible income documentation for mortgages and loans</div></div></div>`},
-  smartinbox:{title:'Smart Inbox',html:`<div class="coming-wrap"><div class="coming-icon" style="background:var(--gold-lo)"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.8"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div><div style="font-size:22px;font-weight:700;color:var(--ink-1);margin-bottom:10px;letter-spacing:-0.03em">Smart Inbox</div><div style="font-size:14px;color:var(--ink-2);line-height:1.75;margin-bottom:20px">Forward a booking confirmation email to Slf:mde and it reads it — extracting the client, date, fee and job description, then creating the calendar event and draft invoice automatically.</div><span class="tag t-soon" style="padding:8px 18px;font-size:13px">Coming in Version 2</span><div class="coming-detail"><div class="cd-item"><div class="cd-dot" style="background:var(--gold)"></div>AI reads booking emails — extracts client, date, fee, job type</div><div class="cd-item"><div class="cd-dot" style="background:var(--coral)"></div>Auto-creates calendar event and draft invoice from one email</div><div class="cd-item"><div class="cd-dot" style="background:var(--teal)"></div>Momentum and Horizon update the moment a booking is confirmed</div><div class="cd-item"><div class="cd-dot" style="background:var(--dusk)"></div>Single entry, zero duplication — lean management fully realised</div></div></div>`},
-  help:{title:'Help & Support',html:`<div class="slabel" style="margin-top:0">Frequently asked</div><div style="background:var(--surface-1);border:1px solid var(--line-lo);border-radius:var(--r2);overflow:hidden">${[['How Momentum is calculated','Understanding your score and signals'],['How Horizon works','Reading your future outlook and scenarios'],['Adding invoices and cash','Logging your income correctly'],['What the income tiers mean','Received, sent, and ahead — explained'],['Connecting APIs and bank feeds','Coming in a future release']].map(([q,s])=>`<div style="padding:13px 16px;border-bottom:1px solid var(--line-lo);cursor:pointer"><div style="font-size:var(--text-sm);font-weight:500;color:var(--ink-1)">${q}</div><div style="font-size:12px;color:var(--ink-3);margin-top:2px">${s}</div></div>`).join('')}</div><div class="slabel">Send a message</div><div class="ig"><textarea class="ta" rows="4" placeholder="Tell us what you need help with..."></textarea></div><button class="btn btn-sage" onclick="toast('Message sent — we'll be in touch')">Send message</button><div style="text-align:center;padding:18px 0 0;font-size:12px;color:var(--ink-3)">Slf:mde · Prototype v2 · Infrastructure for creative professionals</div>`},
-};
-
-function showSec(key,from){
-  closeMenu();
-  secFrom=from||'s-momentum';
-  const p=secPages[key];
-  if(!p)return;
-  document.getElementById('sec-title').textContent=p.title;
-  document.getElementById('sec-body').innerHTML=p.html;
-  document.getElementById('sec-back-btn').onclick=()=>go(secFrom);
-  go('s-secondary');
-}
-
-// ─── INVOICE LOGIC ──────────────────────────────────
-const W={received:.95,sent:.70,ahead:.32};
-function fmt(n){return'£'+Math.round(n).toLocaleString();}
-function recalc(){
-  const r=received.reduce((a,i)=>a+i.amount,0);
-  const s=sent.reduce((a,i)=>a+i.amount,0);
-  const ah=ahead.reduce((a,i)=>a+i.amount,0);
-  const autoW=Math.min(.55,.15+(r/(r+s+ah+1))*.6);
-  const total=Math.round(r*W.received+s*W.sent+ah*autoW);
-  const setT=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
-  setT('inv-hero',fmt(total));setT('sp-recv',fmt(r));setT('sp-sent',fmt(s));setT('sp-ahead',fmt(ah));
-  setT('m-total',fmt(total));setT('m-confirmed',fmt(r));setT('m-motion',fmt(Math.round(s*W.sent+ah*autoW)));
-  const attn=sent.filter(i=>i.status==='attention');
-  const n=document.getElementById('attn-notice');
-  if(n){if(attn.length){n.style.display='block';document.getElementById('attn-text').textContent=`${attn[0].client} — a gentle follow-up might be timely.`;}else{n.style.display='none';}}
-}
-function statusInfo(item){
-  if(item.type==='cash'||item.status==='received')return{label:'Received',cls:'t-received'};
-  if(item.status==='attention')return{label:'Follow up',cls:'t-attention'};
-  if(item.status==='sent')return{label:'Sent',cls:'t-sent'};
-  if(item.status==='ahead')return{label:'Upcoming',cls:'t-upcoming'};
-  return{label:'Draft',cls:'t-upcoming'};
-}
-const ac=['#E8614A','#3AADA0','#8B7EC8','#E8A820','#7BAE9A','#C4A882'];
-function ini(n){return n.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();}
-function renderInvList(filter){
-  let all=[...received,...sent,...ahead];
-  if(filter==='received')all=received;
-  else if(filter==='sent')all=sent;
-  else if(filter==='cash')all=received.filter(i=>i.type==='cash');
-  const w=document.getElementById('inv-cards-wrap');
-  if(!w)return;
-  const isCollapsed=all.length>2;
-  const cards=all.map((item,i)=>{
-    const{label,cls}=statusInfo(item);
-    const bg=ac[i%ac.length];
-    return`<div class="inv-card"><div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px"><div style="display:flex;align-items:center;gap:10px"><div style="width:36px;height:36px;border-radius:10px;background:${bg};display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0">${ini(item.client)}</div><div><div style="font-size:16px;font-weight:500;color:var(--ink-1)">${item.client}</div><div style="font-size:12px;color:var(--ink-3);margin-top:2px">${item.desc}</div></div></div><div class="money" style="font-size:20px;color:var(--ink-1)">${fmt(item.amount)}</div></div><div style="display:flex;align-items:center;justify-content:space-between"><span class="tag ${cls}">${label}</span><span style="font-size:12px;color:var(--ink-3)">${item.date||''}</span></div></div>`;
-  }).join('');
-  const toggleLabel=isCollapsed?`${all.length} entries — tap to expand`:`Collapse`;
-  w.innerHTML=`<div class="inv-stack-wrap">
-    <div class="inv-stack-inner ${isCollapsed?'collapsed':''}" id="inv-stack">
-      ${cards}
-    </div>
-    ${all.length>2?`<button class="inv-stack-toggle" onclick="toggleInvStack(this)">
-      <span id="inv-toggle-lbl">${toggleLabel}</span>
-      <svg class="inv-stack-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-    </button>`:''}
-  </div>`;
-}
-
-function toggleInvStack(btn){
-  const stack=document.getElementById('inv-stack');
-  const lbl=document.getElementById('inv-toggle-lbl');
-  const isCollapsed=stack.classList.contains('collapsed');
-  if(isCollapsed){
-    stack.classList.remove('collapsed');
-    if(lbl)lbl.textContent='Collapse';
-  } else {
-    stack.classList.add('collapsed');
-    const count=stack.querySelectorAll('.inv-card').length;
-    if(lbl)lbl.textContent=count+' entries — tap to expand';
-  }
-}
-function filterInv(el,f){
-  document.querySelectorAll('#s-invoices .chip').forEach(c=>c.classList.remove('on'));
-  el.classList.add('on');renderInvList(f);
-}
-function logCash(){
-  const from=document.getElementById('c-from').value.trim();
-  const forW=document.getElementById('c-for').value.trim()||'Cash payment';
-  const amt=parseFloat(document.getElementById('c-amt').value)||0;
-  if(!from||!amt)return;
-  received.unshift({id:'c'+Date.now(),client:from,desc:forW,amount:amt,date:'Today',type:'cash',status:'received'});
-  closeModal('m-cash');
-  ['c-from','c-for','c-amt'].forEach(id=>document.getElementById(id).value='');
-  renderInvList('all');recalc();renderCal(currentCalMonth||4);
-  toast('Cash received — Momentum, Horizon and Invoices updated');
-}
-function addEvent(){
-  const name=document.getElementById('ev-name').value.trim();
-  const val=parseFloat(document.getElementById('ev-val').value)||0;
-  const date=document.getElementById('ev-date').value||'';
-  const client=document.getElementById('ev-client').value.trim();
-  if(!name)return;
-  
-  // Add to pipeline ahead
-  const evId='e'+Date.now();
-  const evDate=date||'This month';
-  ahead.unshift({id:evId,client:client||name,desc:name,amount:val,date:evDate,status:'ahead'});
-  
-  closeModal('m-event');
-  document.getElementById('ev-name').value='';
-  document.getElementById('ev-val').value='';
-  document.getElementById('ev-client').value='';
-  
-  // Sync: update all connected screens
-  recalc();
-  renderInvList('all');
-  renderCal(currentCalMonth||4);
-  
-  // Lean prompt: offer to create draft invoice if there's a value
-  if(val>0){
-    setTimeout(()=>{
-      showInvoicePrompt(client||name, name, val, evDate, evId);
-    },400);
-  } else {
-    toast('Event added — Momentum and Horizon updated');
-  }
-}
-
-// ── LEAN SYNC: Invoice prompt after adding billable event ──
-function showInvoicePrompt(clientName, desc, amount, date, evId){
-  const modal=document.getElementById('m-inv-prompt');
-  document.getElementById('ip-client').textContent=clientName||'this client';
-  document.getElementById('ip-client2').textContent=clientName||'this client';
-  document.getElementById('ip-amount').textContent='£'+Math.round(amount).toLocaleString();
-  document.getElementById('ip-amount2').textContent='£'+Math.round(amount).toLocaleString();
-  document.getElementById('ip-desc').textContent=desc;
-  modal._evId=evId;
-  modal._client=clientName;
-  modal._amount=amount;
-  modal._desc=desc;
-  modal._date=date;
-  modal.classList.add('open');
-}
-
-function createDraftFromEvent(){
-  const modal=document.getElementById('m-inv-prompt');
-  const client=modal._client||'';
-  const amount=modal._amount||0;
-  const desc=modal._desc||'';
-  const date=modal._date||'';
-  modal.classList.remove('open');
-  
-  // Pre-fill the invoice creation form
-  const today=new Date().toISOString().split('T')[0];
-  const due=new Date();due.setDate(due.getDate()+14);
-  
-  // Navigate to invoice create, pre-fill fields
-  go('s-inv-c1');
-  setTimeout(()=>{
-    const fc=document.getElementById('f-client');
-    const fi=document.getElementById('f-invno');
-    const fd=document.getElementById('f-due');
-    if(fc)fc.value=client;
-    if(fi)fi.value='INV-'+(sent.length+received.length+1).toString().padStart(3,'0');
-    if(fd)fd.value=due.toISOString().split('T')[0];
-    // Pre-add the line item
-    lineItems=[{desc:desc,qty:1,rate:amount}];
-    // Skip to step 2 where line items are shown
-    go('s-inv-c2');
-    setTimeout(()=>{renderLI();},100);
-    toast('Draft invoice pre-filled — review and send when ready');
-  },200);
-}
-
-function dismissInvoicePrompt(){
-  document.getElementById('m-inv-prompt').classList.remove('open');
-  toast('Event added — create invoice anytime from Invoices');
-}
-
-// Track current calendar month for sync
-let currentCalMonth=4;
-
-// ─── INVOICE CREATE ─────────────────────────────────
-function goInvStep(n){if(n===4)buildPreview();go('s-inv-c'+n);}
-function renderLI(){
-  const cur=document.getElementById('f-cur')?.value||'GBP';
-  const sym={GBP:'£',EUR:'€',USD:'$'}[cur];
-  const el=document.getElementById('li-list');
-  if(!el)return;
-  el.innerHTML=lineItems.length===0?`<div style="font-size:13px;color:var(--ink-3);text-align:center;padding:10px 0 6px">No items yet</div>`:lineItems.map((li,i)=>`<div class="li-item"><div style="flex:1"><div style="font-size:var(--text-sm);font-weight:500;color:var(--ink-1)">${li.desc}</div><div style="font-size:12px;color:var(--ink-3)">${li.qty} × ${sym}${li.rate}</div></div><div class="money" style="font-size:var(--text-sm);color:var(--ink-1)">${sym}${Math.round(li.qty*li.rate)}</div><button class="li-del" onclick="removeLine(${i})">×</button></div>`).join('');
-  const sub=lineItems.reduce((a,l)=>a+l.qty*l.rate,0);
-  const st=id=>document.getElementById(id);
-  if(st('t-sub'))st('t-sub').textContent=sym+Math.round(sub);
-  if(st('t-vat'))st('t-vat').textContent=sym+Math.round(sub*.2);
-  if(st('t-tot'))st('t-tot').textContent=sym+Math.round(sub*1.2);
-}
-function toggleAddLine(){const f=document.getElementById('li-form');f.style.display=f.style.display==='none'?'block':'none';}
-function addLine(){
-  const d=document.getElementById('li-d').value.trim();
-  const q=parseFloat(document.getElementById('li-q').value)||1;
-  const r=parseFloat(document.getElementById('li-r').value)||0;
-  if(!d||!r)return;
-  lineItems.push({desc:d,qty:q,rate:r});
-  document.getElementById('li-d').value='';document.getElementById('li-r').value='';
-  document.getElementById('li-form').style.display='none';
-  renderLI();
-}
-function removeLine(i){lineItems.splice(i,1);renderLI();}
-function buildPreview(){
-  const cur=document.getElementById('f-cur')?.value||'GBP';
-  const sym={GBP:'£',EUR:'€',USD:'$'}[cur];
-  const from=document.getElementById('f-from')?.value||'Your Name';
-  const client=document.getElementById('f-client')?.value||'Client';
-  const num=document.getElementById('f-invno')?.value||'INV-001';
-  const due=document.getElementById('f-due')?.value||'—';
-  const sub=lineItems.reduce((a,l)=>a+l.qty*l.rate,0);
-  const vat=sub*.2;const tot=sub+vat;
-  const rows=lineItems.length?lineItems.map(l=>`<tr><td>${l.desc}</td><td style="text-align:center;color:var(--ink-3)">${l.qty}</td><td style="text-align:right;font-weight:700">${sym}${Math.round(l.qty*l.rate)}</td></tr>`).join(''):`<tr><td colspan="3" style="color:var(--ink-3);text-align:center;padding:10px;font-size:13px">No items added</td></tr>`;
-  const pb=document.getElementById('pv-body');
-  if(pb)pb.innerHTML=`<div class="pv-card"><div style="display:flex;justify-content:space-between;margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid var(--line-lo)"><div><div style="font-size:var(--text-lg);font-weight:700;color:var(--coral);letter-spacing:-0.03em">Slf:mde</div><div style="font-size:13px;color:var(--ink-2);margin-top:3px">${from}</div></div><div style="text-align:right"><div style="font-size:var(--text-lg);font-weight:600;color:var(--ink-1)">Invoice</div><div style="font-size:12px;color:var(--ink-3)">${num}<br>Due: ${due}</div></div></div><div style="margin-bottom:var(--space-4)"><div style="font-size:var(--text-xs);color:var(--ink-3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px">Bill to</div><div style="font-size:var(--text-base);font-weight:500;color:var(--ink-1)">${client}</div></div><table class="pv-items"><thead><tr><th>Description</th><th style="text-align:center">Qty</th><th style="text-align:right">Amount</th></tr></thead><tbody>${rows}</tbody></table><div style="font-size:13px;color:var(--ink-2)"><div style="display:flex;justify-content:space-between;padding:4px 0"><span>Subtotal</span><span>${sym}${Math.round(sub)}</span></div><div style="display:flex;justify-content:space-between;padding:4px 0"><span>VAT (20%)</span><span>${sym}${Math.round(vat)}</span></div></div><div style="display:flex;justify-content:space-between;align-items:baseline;padding:10px 0 0;border-top:2px solid var(--text);margin-top:6px"><div style="font-size:var(--text-base);font-weight:600;color:var(--ink-1)">Total due</div><div class="money" style="font-size:22px;color:var(--coral)">${sym}${Math.round(tot)}</div></div><div style="background:var(--surface-2);border-radius:var(--r3);padding:12px;margin-top:12px"><div style="font-size:var(--text-xs);color:var(--ink-3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px">Pay to</div><div style="font-size:13px;color:var(--ink-2)">Sort: ${document.getElementById('f-sort')?.value||'—'} · Account: ${document.getElementById('f-accno')?.value||'—'}</div></div></div>`;
-}
-function saveInvoice(){
-  const client=document.getElementById('f-client')?.value||'New Client';
-  const tot=lineItems.reduce((a,l)=>a+l.qty*l.rate,0)*1.2;
-  const num=document.getElementById('f-invno')?.value||'INV';
-  sent.unshift({id:'i'+Date.now(),client,desc:'Invoice '+num,amount:Math.round(tot),date:'Due soon',status:'sent'});
-  lineItems=[];go('s-invoices');renderInvList('all');recalc();
-  toast('Invoice saved ✓');
-}
-function saveDraft(){
-  sent.unshift({id:'d'+Date.now(),client:document.getElementById('f-client')?.value||'Draft',desc:'Draft invoice',amount:0,date:'Draft',status:'sent'});
-  lineItems=[];go('s-invoices');renderInvList('all');recalc();
-  toast('Draft saved ✓');
-}
-
-// ─── CALENDAR ───────────────────────────────────────
-const mNames=['','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-const mStarts={4:2,5:4,6:0,7:2};const mDays={4:30,5:31,6:30,7:31};
-const evDays={4:{1:'paid',7:'deadline',9:'nonpaid',15:'paid',18:'deadline'},5:{3:'paid',10:'nonpaid',15:'paid'},6:{3:'paid',15:'paid',18:'deadline'}};
-function renderCal(m){
-  const t=document.getElementById('cal-month-title');if(t)t.textContent=mNames[m]+' 2026';
-  const start=mStarts[m]||0;const days=mDays[m]||30;const evs=evDays[m]||{};
-  const grid=document.getElementById('cal-grid');if(!grid)return;
-  let html='';
-  for(let i=0;i<start;i++)html+='<div></div>';
-  for(let d=1;d<=days;d++){
-    const isT=(m===4&&d===1);const ev=evs[d];
-    html+=`<div class="cal-day ${isT?'today':''} ${ev&&!isT?'has-ev':''}">${d}</div>`;
-  }
-  grid.innerHTML=html;
-}
-function setMonth(el,m){
-  document.querySelectorAll('.mtab').forEach(t=>t.classList.remove('on'));
-  el.classList.add('on');
-  currentCalMonth=m;
-  renderCal(m);
-}
-function setAvail(v){
-  document.getElementById('avail-btn-a').className='btn '+(v==='a'?'btn-primary':'btn-ghost')+' btn-sm';
-  document.getElementById('avail-btn-b').className='btn '+(v==='b'?'btn-primary':'btn-ghost')+' btn-sm';
-}
-
-// ─── HORIZON TF ─────────────────────────────────────
-const htf={
-  '3m':{h:'Strengthening',s:'Consistent pattern — direction is clear',up:'£5,640',mid:'£4,180',dn:'£2,850',c:'Good',cw:'68%',r:'Your pattern is consistent and your direction is clear. The range ahead reflects natural variability — not a problem to solve.',l:'3 months'},
-  '6m':{h:'Building',s:'Pipeline converting — medium-term confidence improving',up:'£10,200',mid:'£7,800',dn:'£5,100',c:'Moderate',cw:'56%',r:'Your 6-month outlook is forming well. Each confirmed piece of work narrows the range.',l:'6 months'},
-  '1y':{h:'Stable direction',s:'Annual view — structural patterns emerge at this range',up:'£19,800',mid:'£14,600',dn:'£9,200',c:'Moderate',cw:'48%',r:'Your 1-year horizon is stable. Adding one recurring retainer would significantly compress this uncertainty band.',l:'1 year'},
-  '3y':{h:'Viable trajectory',s:'Directional at 3 years — focus on the shape, not the numbers',up:'£54k+',mid:'£38k',dn:'£22k',c:'Building',cw:'34%',r:'Across 3 years your model shows a viable trajectory. Client concentration is the key structural variable to watch.',l:'3 years'},
-  '5y':{h:'Long view',s:'Strategic orientation — broad direction and structure only',up:'£80k+',mid:'£55k',dn:'£28k',c:'Building',cw:'24%',r:'At 5 years this is strategic orientation only. Focus on structural resilience and recurring income patterns.',l:'5 years'},
-};
-function setHTf(el,tf){
-  document.querySelectorAll('.htab').forEach(t=>t.classList.remove('on'));
-  el.classList.add('on');
-  const d=htf[tf];
-  const st=id=>document.getElementById(id);
-  if(st('h-heading'))st('h-heading').textContent=d.h;
-  if(st('h-sub'))st('h-sub').textContent=d.s;
-  if(st('h-up'))st('h-up').textContent=d.up;
-  if(st('h-mid'))st('h-mid').textContent=d.mid;
-  if(st('h-down'))st('h-down').textContent=d.dn;
-  if(st('h-conf'))st('h-conf').textContent=d.c;
-  if(st('h-cbar'))st('h-cbar').style.width=d.cw;
-  if(st('h-reading'))st('h-reading').textContent=d.r;
-  if(st('htf-lbl'))st('htf-lbl').textContent=d.l;
-}
-
-// ─── ONBOARDING ─────────────────────────────────────
-function selOb(el){
-  el.closest('.ob-wrap').querySelectorAll('.ob-opt').forEach(o=>o.classList.remove('sel'));
-  el.classList.add('sel');
-}
-
-// ─── READING & DISPLAY ──────────────────────────────
-function setFont(f){
-  ['font-standard','font-atkinson'].forEach(id=>document.getElementById(id)?.classList.remove('on'));
-  document.getElementById('font-'+f)?.classList.add('on');
-  const fv={'standard':"'DM Sans',sans-serif",'atkinson':"'Atkinson Hyperlegible',sans-serif"};
-  document.documentElement.style.setProperty('--read-font',fv[f]||fv.standard);
-}
-function setSize(s){
-  ['sz-std','sz-lg','sz-xl'].forEach(id=>document.getElementById(id)?.classList.remove('on'));
-  document.getElementById('sz-'+s)?.classList.add('on');
-  document.documentElement.style.setProperty('--read-size',{std:'14px',lg:'16px',xl:'19px'}[s]||'14px');
-}
-function setLS(s){
-  ['ls-n','ls-r','ls-w'].forEach(id=>document.getElementById(id)?.classList.remove('on'));
-  document.getElementById('ls-'+s)?.classList.add('on');
-  document.documentElement.style.setProperty('--read-ls',{n:'0.01em',r:'0.05em',w:'0.10em'}[s]);
-}
-function setLH(s){
-  ['lh-n','lh-c','lh-s'].forEach(id=>document.getElementById(id)?.classList.remove('on'));
-  document.getElementById('lh-'+s)?.classList.add('on');
-  document.documentElement.style.setProperty('--read-lh',{n:'1.55',c:'1.85',s:'2.15'}[s]);
-}
-const ovC={none:'transparent',warm:'rgba(255,200,100,0.13)',peach:'rgba(255,170,120,0.13)',sage:'rgba(100,190,140,0.10)',cool:'rgba(100,160,230,0.10)',lav:'rgba(150,130,210,0.10)'};
-function setOv(o){
-  document.querySelectorAll('.ov-dot').forEach(d=>d.classList.remove('sel'));
-  document.getElementById('ov-'+o)?.classList.add('sel');
-  document.getElementById('disp-overlay').style.background=ovC[o];
-  document.getElementById('tint-overlay').style.background=ovC[o];
-}
-function toggleHC(btn){
-  const on=btn.classList.contains('on');
-  document.documentElement.style.setProperty('--text2',on?'#2E2218':'#6B5E52');
-  document.documentElement.style.setProperty('--text3',on?'#6A5A4A':'#A89888');
-}
-
-// ─── TOAST ──────────────────────────────────────────
-function toast(msg){
-  const t=document.createElement('div');
-  t.className='toast-el';t.textContent=msg;
-  document.body.appendChild(t);
-  setTimeout(()=>{t.style.opacity='0';setTimeout(()=>t.remove(),400)},2600);
-}
-
-
-// ── DEV PANEL ────────────────────────────────────────────────────────
-const demoReceived=[
-  {id:'r1',client:'BBC Session',desc:'Audio production — May',amount:1200,date:'15 Apr',type:'cash',status:'received'},
-  {id:'r2',client:'Tom Hadley',desc:'Headshots — cash',amount:350,date:'2 Apr',type:'cash',status:'received'},
-  {id:'r3',client:'Workshop fee',desc:'Saturday session',amount:450,date:'1 Apr',type:'cash',status:'received'},
-];
-const demoSent=[
-  {id:'s1',client:'Studio North',desc:'Brand identity project',amount:450,date:'Due 20 Apr',status:'sent'},
-  {id:'s2',client:'Festival Gig',desc:'Performance fee',amount:900,date:'Due 10 Apr',status:'attention'},
-  {id:'s3',client:'Nova Agency',desc:'Strategy consultation',amount:600,date:'Due 28 Apr',status:'sent'},
-];
-const demoAhead=[
-  {id:'a1',client:'Brighter Labs',desc:'Kick-off shoot day',amount:800,date:'7 Apr',status:'ahead'},
-  {id:'a2',client:'Flux Creative',desc:'Brand photography',amount:620,date:'9 Apr',status:'ahead'},
-  {id:'a3',client:'Nova Agency',desc:'Consultation follow-up',amount:780,date:'14 Apr',status:'ahead'},
-];
-
-function openDevPanel(){
-  closeModal('m-dev');
-  setTimeout(()=>{
-    renderDevIncomeRows();
-    updateDevStats();
-    document.getElementById('m-dev').classList.add('open');
-  },50);
-}
-
-function renderDevIncomeRows(){
-  const all=[
-    ...received.map(i=>({...i,_type:'received'})),
-    ...sent.map(i=>({...i,_type:'sent'})),
-    ...ahead.map(i=>({...i,_type:'ahead'}))
-  ];
-  const el=document.getElementById('dev-income-rows');
-  if(!el)return;
-  const colors={'received':'var(--sage)','sent':'var(--sand)','ahead':'var(--dusk)'};
-  el.innerHTML=all.map((item,idx)=>`
-    <div class="dev-row" id="dev-row-${item.id}">
-      <div style="width:6px;height:6px;border-radius:50%;background:${colors[item._type]||'#fff'};flex-shrink:0"></div>
-      <div class="dev-label">${item.client}<span style="color:rgba(255,255,255,0.28);font-size:11px"> · ${item._type}</span></div>
-      <input class="dev-inp" type="number" value="${item.amount}" onchange="updateIncome('${item.id}','${item._type}',this.value)" />
-      <button class="dev-btn dev-btn-danger" style="padding:6px 10px;font-size:11px" onclick="deleteIncome('${item.id}','${item._type}')">×</button>
-    </div>
-  `).join('');
-}
-
-function updateIncome(id, type, val){
-  const amount=parseFloat(val)||0;
-  const arr=type==='received'?received:type==='sent'?sent:ahead;
-  const item=arr.find(i=>i.id===id);
-  if(item){ item.amount=amount; syncAll(); updateDevStats(); }
-}
-
-function deleteIncome(id, type){
-  if(type==='received') received=received.filter(i=>i.id!==id);
-  else if(type==='sent') sent=sent.filter(i=>i.id!==id);
-  else ahead=ahead.filter(i=>i.id!==id);
-  syncAll(); renderDevIncomeRows(); updateDevStats();
-}
-
-function addDevIncome(){
-  const newItem={id:'dev'+Date.now(),client:'New client',desc:'New entry',amount:500,date:'Today',type:'cash',status:'received'};
-  received.unshift(newItem);
-  syncAll(); renderDevIncomeRows(); updateDevStats();
-  toast('Entry added — edit amount above');
-}
-
-function loadScenario(s){
-  const scenarios={
-    strong:{
-      r:[{id:'s1',client:'BBC Commision',desc:'Series soundtrack',amount:3200,date:'Apr',type:'cash',status:'received'},{id:'s2',client:'Flux Creative',desc:'Brand music',amount:1800,date:'Apr',type:'cash',status:'received'}],
-      s:[{id:'ss1',client:'Studio North',desc:'Production fee',amount:2200,date:'Due 30 Apr',status:'sent'}],
-      a:[{id:'sa1',client:'Festival North',desc:'Headline set',amount:2500,date:'May',status:'ahead'},{id:'sa2',client:'Nova Agency',desc:'Campaign music',amount:1800,date:'May',status:'ahead'}]
-    },
-    quiet:{
-      r:[{id:'q1',client:'Pub session',desc:'Thursday residency',amount:180,date:'Apr',type:'cash',status:'received'}],
-      s:[{id:'qs1',client:'Old client',desc:'Follow up invoice',amount:450,date:'Overdue',status:'attention'}],
-      a:[{id:'qa1',client:'Possible lead',desc:'Speculative booking',amount:300,date:'TBC',status:'ahead'}]
-    },
-    building:{
-      r:[{id:'b1',client:'Workshop',desc:'Saturday session',amount:420,date:'Apr',type:'cash',status:'received'},{id:'b2',client:'Online lesson',desc:'3x sessions',amount:240,date:'Apr',type:'cash',status:'received'}],
-      s:[{id:'bs1',client:'New client',desc:'First project',amount:800,date:'Due 25 Apr',status:'sent'}],
-      a:[{id:'ba1',client:'Referred lead',desc:'Brand project',amount:1200,date:'May',status:'ahead'},{id:'ba2',client:'Studio',desc:'Session work',amount:600,date:'May',status:'ahead'}]
-    },
-    empty:{r:[],s:[],a:[]}
-  };
-  const sc=scenarios[s];
-  if(!sc)return;
-  received=sc.r; sent=sc.s; ahead=sc.a;
-  syncAll(); renderDevIncomeRows(); updateDevStats();
-  toast('Scenario loaded: '+s);
-}
-
-function setPipelineConf(level){
-  document.querySelectorAll('[id^="pc-"]').forEach(b=>b.style.borderColor='rgba(255,255,255,0.18)');
-  document.getElementById('pc-'+level).style.borderColor='var(--coral)';
-  const notes={strong:'Horizon range narrows — signal clarity: Strong',moderate:'Horizon range moderate — signal clarity: Good',uncertain:'Horizon range widens — signal clarity: Building'};
-  const note=document.getElementById('dev-conf-note');
-  if(note)note.textContent=notes[level];
-  // Adjust ahead weight based on confidence
-  const weights={strong:.55,moderate:.32,uncertain:.15};
-  // Store in a global for recalc
-  window._devPipelineWeight=weights[level];
-  syncAll(); toast('Pipeline confidence set to '+level);
-}
-
-function toggleDevJson(){
-  const el=document.getElementById('dev-json-view');
-  if(!el)return;
-  if(el.style.display==='none'||!el.style.display){
-    const state={received,sent,ahead,totals:{r:received.reduce((a,i)=>a+i.amount,0),s:sent.reduce((a,i)=>a+i.amount,0),a:ahead.reduce((a,i)=>a+i.amount,0)}};
-    el.innerHTML='<div class="dev-json">'+JSON.stringify(state,null,2)+'</div>';
-    el.style.display='block';
-  } else { el.style.display='none'; }
-}
-
-function resetToDemo(){
-  received=[...demoReceived]; sent=[...demoSent]; ahead=[...demoAhead];
-  syncAll(); renderDevIncomeRows(); updateDevStats();
-  toast('Reset to demo data ✓');
-}
-
-function resetToEmpty(){
-  received=[]; sent=[]; ahead=[];
-  syncAll(); renderDevIncomeRows(); updateDevStats();
-  toast('All data cleared');
-}
-
-function updateDevStats(){
-  const r=received.reduce((a,i)=>a+i.amount,0);
-  const s=sent.reduce((a,i)=>a+i.amount,0);
-  const a=ahead.reduce((a,i)=>a+i.amount,0);
-  const setEl=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
-  setEl('dev-stat-recv','£'+r.toLocaleString());
-  setEl('dev-stat-sent','£'+s.toLocaleString());
-  setEl('dev-stat-ahead','£'+a.toLocaleString());
-}
-
-function syncAll(){
-  recalc();
-  renderInvList('all');
-  renderCal(currentCalMonth||4);
-}
-
-// ─── INIT ────────────────────────────────────────────
-const today=new Date().toISOString().split('T')[0];
-['f-issue','f-due','ev-date'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=today;});
-const d14=new Date();d14.setDate(d14.getDate()+14);
-const fd=document.getElementById('f-due');if(fd)fd.value=d14.toISOString().split('T')[0];
-recalc();renderInvList('all');renderCal(4);
-</script>
-
-<!-- INVOICE PROMPT MODAL — lean sync: offered after adding billable event -->
-<div class="modal-bg" id="m-inv-prompt" onclick="if(event.target===this)dismissInvoicePrompt()">
-<div class="modal" onclick="event.stopPropagation()" style="padding:22px 22px 40px">
-  <div class="m-handle"></div>
-  <!-- Lean signal icon -->
-  <div style="width:52px;height:52px;border-radius:16px;background:var(--sage3);display:flex;align-items:center;justify-content:center;margin-bottom:16px">
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--sage)" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-  </div>
-  <div style="font-size:var(--text-lg);font-weight:600;color:var(--text);margin-bottom:6px">Create a draft invoice?</div>
-  <div style="font-size:13px;color:var(--ink-3);line-height:1.7;margin-bottom:20px">You've added a billable gig for <strong id="ip-client" style="color:var(--text);font-weight:600"></strong> worth <strong id="ip-amount" style="color:var(--text);font-weight:600"></strong>. A draft invoice is ready — one tap to open it pre-filled and ready to send.</div>
-  
-  <!-- What gets pre-filled preview -->
-  <div style="background:var(--surface-2);border-radius:var(--r2);padding:14px;margin-bottom:18px">
-    <div style="font-size:var(--text-xs);color:var(--ink-3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px;font-weight:500">Pre-filled for you</div>
-    <div style="display:flex;flex-direction:column;gap:6px">
-      <div style="display:flex;gap:8px;font-size:13px"><span style="color:var(--ink-3);width:64px;flex-shrink:0">Client</span><span style="color:var(--text);font-weight:500" id="ip-client2"></span></div>
-      <div style="display:flex;gap:8px;font-size:13px"><span style="color:var(--ink-3);width:64px;flex-shrink:0">Work</span><span style="color:var(--ink-1)" id="ip-desc"></span></div>
-      <div style="display:flex;gap:8px;font-size:13px"><span style="color:var(--ink-3);width:64px;flex-shrink:0">Amount</span><span style="color:var(--text);font-weight:600" id="ip-amount2"></span></div>
-    </div>
-  </div>
-
-  <button class="btn btn-sage" onclick="createDraftFromEvent()" style="margin-bottom:8px">
-    <span style="display:flex;align-items:center;justify-content:center;gap:8px">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-      Open pre-filled invoice
-    </span>
-  </button>
-  <button class="btn btn-ghost" onclick="dismissInvoicePrompt()">Not yet — I'll do it later</button>
-  
-  <div style="text-align:center;margin-top:12px;font-size:var(--text-xs);color:var(--ink-3);line-height:1.6">This is the lean approach — the gig is already synced to Momentum and Horizon. The invoice is the last step.</div>
-</div></div>
-
-<!-- DEV / TEST PANEL -->
-<div class="modal-bg" id="m-dev" onclick="if(event.target===this)closeModal('m-dev')">
-<div class="dev-panel" onclick="event.stopPropagation()">
-  <div class="m-handle" style="background:rgba(255,255,255,0.15)"></div>
-  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
-    <div>
-      <div style="font-size:16px;font-weight:600;color:#fff;letter-spacing:-0.02em">Developer Panel <span class="dev-tag">Test mode</span></div>
-      <div style="font-size:12px;color:rgba(255,255,255,0.38);margin-top:3px">Edit values and watch the app respond in real time</div>
-    </div>
-  </div>
-
-  <!-- INCOME EDITOR -->
-  <div class="dev-section">
-    <div class="dev-section-title">Income data — edit any value</div>
-    <div id="dev-income-rows"></div>
-    <button class="dev-btn dev-btn-coral" style="width:100%;margin-top:8px" onclick="addDevIncome()">+ Add income entry</button>
-  </div>
-
-  <!-- QUICK SCENARIOS -->
-  <div class="dev-section">
-    <div class="dev-section-title">Quick scenarios</div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-      <button class="dev-btn dev-btn-ghost-light" onclick="loadScenario('strong')">Strong month</button>
-      <button class="dev-btn dev-btn-ghost-light" onclick="loadScenario('quiet')">Quiet period</button>
-      <button class="dev-btn dev-btn-ghost-light" onclick="loadScenario('building')">Building back</button>
-      <button class="dev-btn dev-btn-ghost-light" onclick="loadScenario('empty')">Empty / new user</button>
-    </div>
-  </div>
-
-  <!-- PIPELINE CONFIDENCE -->
-  <div class="dev-section">
-    <div class="dev-section-title">Pipeline confidence — affects Horizon</div>
-    <div style="display:flex;gap:6px;flex-wrap:wrap">
-      <button class="dev-btn dev-btn-ghost-light" id="pc-strong" onclick="setPipelineConf('strong')">Strong</button>
-      <button class="dev-btn dev-btn-ghost-light" id="pc-moderate" onclick="setPipelineConf('moderate')">Moderate</button>
-      <button class="dev-btn dev-btn-ghost-light" id="pc-uncertain" onclick="setPipelineConf('uncertain')">Uncertain</button>
-    </div>
-    <div style="font-size:11px;color:rgba(255,255,255,0.30);margin-top:8px" id="dev-conf-note">Affects Horizon scenario range and signal clarity bar</div>
-  </div>
-
-  <!-- DATA STATE -->
-  <div class="dev-section">
-    <div class="dev-section-title">Current data state</div>
-    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px">
-      <button class="dev-btn dev-btn-ghost-light" onclick="toggleDevJson()">View raw JSON</button>
-      <button class="dev-btn dev-btn-danger" onclick="resetToDemo()">Reset to demo</button>
-      <button class="dev-btn dev-btn-danger" onclick="resetToEmpty()">Clear all data</button>
-    </div>
-    <div id="dev-json-view" style="display:none"></div>
-    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:8px">
-      <div style="background:rgba(255,255,255,0.06);border-radius:8px;padding:10px;text-align:center">
-        <div style="font-size:18px;font-weight:700;color:#fff;letter-spacing:-0.03em" id="dev-stat-recv">-</div>
-        <div style="font-size:10px;color:rgba(255,255,255,0.35);margin-top:2px">Received</div>
-      </div>
-      <div style="background:rgba(255,255,255,0.06);border-radius:8px;padding:10px;text-align:center">
-        <div style="font-size:18px;font-weight:700;color:#fff;letter-spacing:-0.03em" id="dev-stat-sent">-</div>
-        <div style="font-size:10px;color:rgba(255,255,255,0.35);margin-top:2px">Sent</div>
-      </div>
-      <div style="background:rgba(255,255,255,0.06);border-radius:8px;padding:10px;text-align:center">
-        <div style="font-size:18px;font-weight:700;color:#fff;letter-spacing:-0.03em" id="dev-stat-ahead">-</div>
-        <div style="font-size:10px;color:rgba(255,255,255,0.35);margin-top:2px">Pipeline</div>
-      </div>
-    </div>
-  </div>
-
-  <button class="btn btn-ghost" style="width:100%;color:rgba(255,255,255,0.50);border-color:rgba(255,255,255,0.15);margin-top:4px" onclick="closeModal('m-dev')">Close panel</button>
-</div>
-</div>
 </body>
 </html>
