@@ -1516,7 +1516,7 @@ document.getElementById("askInp").addEventListener("keydown",e=>{ if(e.key==="En
 function navTo(screen,e){
   document.querySelectorAll(".ni").forEach(b=>b.classList.remove("active-tab"));
   if(e&&e.currentTarget) e.currentTarget.classList.add("active-tab");
-  console.log("Navigate to:",screen);
+  if(screen!=='propellor') window.location.href='slfmde_prototype_v2.html';
 }
 
 function toggleMenu(){ console.log("Menu — wire on insertion"); }
