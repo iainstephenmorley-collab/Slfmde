@@ -190,7 +190,46 @@ body {
 }
 .scroll::-webkit-scrollbar { display: none; }
 
-/* ── BOTTOM NAVIGATION — proprietary feel ──────── */
+/* ═══════════════════════════════════════════════
+   PROPELLOR SCREEN CSS
+═══════════════════════════════════════════════ */
+.ob-root{position:absolute;inset:0;z-index:500;display:flex;flex-direction:column;transition:opacity 0.5s cubic-bezier(0.16,1,0.3,1);}
+.ob-root.hidden{opacity:0;pointer-events:none;}
+.ob-bg{position:absolute;inset:0;background:url('https://raw.githubusercontent.com/iainstephenmorley-collab/Slfmde/refs/heads/main/assets/underwater-light-rays-stockcake.webp') center center/cover no-repeat;z-index:0;}
+.ob-overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(4,18,36,0.72) 0%,rgba(4,18,36,0.78) 35%,rgba(2,10,22,0.88) 65%,rgba(1,6,14,0.96) 100%);z-index:1;}
+.ob-bloom{position:absolute;top:0;left:50%;transform:translateX(-50%);width:280px;height:200px;background:radial-gradient(ellipse at 50% 0%,rgba(232,168,32,0.12) 0%,transparent 70%);z-index:2;pointer-events:none;}
+.ob-skip{position:absolute;top:52px;right:24px;background:none;border:none;font-family:var(--ff);font-size:13px;color:rgba(255,255,255,0.45);cursor:pointer;padding:6px 4px;z-index:10;transition:color 140ms;letter-spacing:0.01em;}
+.ob-skip:active{color:rgba(255,255,255,0.8);}
+.ob-inner{position:relative;z-index:5;flex:1;display:flex;flex-direction:column;padding:60px 28px 36px;}
+.ob-brand{font-size:15px;font-weight:700;color:#E8614A;letter-spacing:-0.03em;margin-bottom:36px;text-shadow:0 0 24px rgba(232,97,74,0.4);}
+.ob-prog{display:flex;gap:6px;margin-bottom:36px;}
+.ob-pd{height:2px;flex:1;border-radius:999px;background:rgba(255,255,255,0.12);transition:background 0.4s cubic-bezier(0.16,1,0.3,1);}
+.ob-pd.done{background:#E8614A;}
+.ob-pd.now{background:rgba(232,168,32,0.7);}
+.ob-q{font-size:26px;font-weight:700;color:rgba(255,255,255,0.95);letter-spacing:-0.03em;line-height:1.2;margin-bottom:10px;text-shadow:0 2px 16px rgba(0,0,0,0.4);}
+.ob-sub{font-size:14px;color:rgba(255,255,255,0.45);line-height:1.65;margin-bottom:32px;}
+.ob-inp{width:100%;padding:16px 18px;border:1.5px solid rgba(255,255,255,0.16);border-radius:16px;font-family:var(--ff);font-size:15px;color:rgba(255,255,255,0.92);background:rgba(255,255,255,0.08);outline:none;backdrop-filter:blur(12px);transition:border-color 140ms,box-shadow 140ms;-webkit-appearance:none;}
+.ob-inp:focus{border-color:rgba(232,168,32,0.55);box-shadow:0 0 0 3px rgba(232,168,32,0.10);}
+.ob-inp::placeholder{color:rgba(255,255,255,0.3);}
+.ob-chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px;}
+.ob-chip{padding:10px 16px;border-radius:999px;font-size:13px;font-weight:500;font-family:var(--ff);color:rgba(255,255,255,0.75);background:rgba(255,255,255,0.08);border:1.5px solid rgba(255,255,255,0.14);cursor:pointer;backdrop-filter:blur(8px);transition:all 140ms cubic-bezier(0.16,1,0.3,1);user-select:none;}
+.ob-chip:active{transform:scale(0.95);}
+.ob-chip.sel{background:rgba(255,255,255,0.18);color:rgba(255,255,255,0.95);border-color:rgba(255,255,255,0.4);font-weight:600;}
+.ob-chip.people.sel{background:rgba(232,97,74,0.25);color:#fff;border-color:rgba(232,97,74,0.6);}
+.ob-chip.visibility.sel{background:rgba(232,168,32,0.22);color:rgba(255,255,255,0.95);border-color:rgba(232,168,32,0.55);}
+.ob-chip.capability.sel{background:rgba(58,173,160,0.22);color:#fff;border-color:rgba(58,173,160,0.55);}
+.ob-btn{margin-top:auto;padding:16px 24px;border:none;border-radius:16px;font-family:var(--ff);font-size:16px;font-weight:600;cursor:pointer;background:#E8614A;color:#fff;box-shadow:0 2px 24px rgba(232,97,74,0.35);transition:all 140ms cubic-bezier(0.16,1,0.3,1);letter-spacing:-0.01em;}
+.ob-btn:active{transform:translateY(1px);box-shadow:0 1px 8px rgba(232,97,74,0.25);}
+.ob-btn:disabled{opacity:0.28;cursor:not-allowed;transform:none;box-shadow:none;}
+.ob-transition{position:absolute;inset:0;z-index:600;background:url('https://raw.githubusercontent.com/iainstephenmorley-collab/Slfmde/refs/heads/main/assets/underwater-light-rays-stockcake.webp') center center/cover no-repeat;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;opacity:0;pointer-events:none;transition:opacity 0.5s cubic-bezier(0.16,1,0.3,1);}
+.ob-transition::after{content:'';position:absolute;inset:0;background:rgba(2,10,22,0.82);}
+.ob-transition.show{opacity:1;pointer-events:all;}
+.ob-transition.fade-out{opacity:0;}
+.ob-spin-wrap{position:relative;z-index:2;width:120px;height:120px;display:flex;align-items:center;justify-content:center;}
+.ob-spin-svg{animation:propSpin 1.8s cubic-bezier(0.4,0,0.2,1) forwards;transform-origin:center;filter:drop-shadow(0 0 18px rgba(232,168,32,0.5));}
+@keyframes propSpin{0%{transform:rotate(0deg) scale(0.3);opacity:0;}30%{opacity:1;}100%{transform:rotate(720deg) scale(1);opacity:1;}}
+.ob-trans-label{position:relative;z-index:2;font-size:14px;font-weight:500;color:rgba(255,255,255,0.7);letter-spacing:0.05em;text-align:center;}
+.ob-trans-sub{position:relative;z-index:2;font-size:12px;color:rgba(255,255,255,0.35);text-align:center;letter-spacing:0.03em;}/* ── BOTTOM NAVIGATION — proprietary feel ──────── */
 .bnav {
   display: flex;
   align-items: center;
