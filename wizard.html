@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>World Cup Wizard — Can you beat the Wizard?</title>
+<meta name="description" content="Guess the score. Beat the Wizard. An unofficial World Cup 2026 prediction game.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --pitch:#0E7A3C;        /* classic felt green */
+  --pitch-deep:#0A6230;
+  --card:#0B6B33;
+  --line:#1E8A4A;
+  --chalk:#F6F8F2;
+  --chalk-dim:#BBE0C6;
+  --hot:#FF3B30;
+  --gold:#FFD23F;
+  --win:#B8FF5E;
+  --real:#7FD4FF;
+  --ink:#073A1D;
+  --radius:14px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  background:
+    radial-gradient(900px 460px at 50% -8%, rgba(255,255,255,.10) 0%, transparent 60%),
+    repeating-linear-gradient(90deg, rgba(255,255,255,.025) 0 80px, transparent 80px 160px),
+    var(--pitch);
+  color:var(--chalk);font-family:'Archivo',sans-serif;min-height:100vh;padding-bottom:60px;
+}
+/* chalk centre circle */
+body::before{
+  content:'';position:fixed;top:-140px;left:50%;transform:translateX(-50%);
+  width:480px;height:480px;border:3px solid rgba(255,255,255,.10);border-radius:50%;
+  pointer-events:none;
+}
+.wrap{max-width:760px;margin:0 auto;padding:0 16px;position:relative}
+
+header{padding:26px 0 8px;text-align:center}
+.eyebrow{font-size:11px;font-weight:800;letter-spacing:.24em;text-transform:uppercase;color:var(--chalk-dim)}
+h1{font-family:'Anton',sans-serif;font-weight:400;font-size:clamp(40px,10.5vw,72px);line-height:.95;letter-spacing:.01em;text-transform:uppercase;margin:6px 0 2px;text-shadow:0 3px 0 rgba(0,0,0,.18)}
+h1 .gold{color:var(--gold)}
+.sub{font-size:14px;color:var(--chalk);font-weight:700}
+.howto-btn{
+  display:inline-block;margin-top:12px;background:var(--gold);color:var(--ink);
+  border:none;border-radius:999px;font-family:'Archivo',sans-serif;font-weight:800;
+  font-size:12px;letter-spacing:.08em;text-transform:uppercase;padding:9px 18px;cursor:pointer;
+  box-shadow:0 3px 0 rgba(0,0,0,.2);
+}
+.howto-btn:active{transform:translateY(2px);box-shadow:0 1px 0 rgba(0,0,0,.2)}
+
+/* scoreboard strip */
+.duel{
+  display:flex;justify-content:center;align-items:center;gap:14px;margin-top:14px;
+  background:var(--ink);border-radius:12px;padding:10px 16px;
+}
+.duel .side{font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--chalk-dim)}
+.duel .num{font-family:'Anton',sans-serif;font-size:30px;color:var(--gold);min-width:36px;text-align:center}
+.duel .vs{color:var(--hot);font-family:'Anton',sans-serif;font-size:16px}
+
+.stages{display:flex;gap:6px;margin:18px 0 16px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-bottom:2px}
+.stages::-webkit-scrollbar{display:none}
+.stage{flex:0 0 auto;border:2px solid rgba(255,255,255,.25);border-radius:999px;padding:8px 14px;font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--chalk);background:transparent;cursor:pointer;font-family:'Archivo',sans-serif;white-space:nowrap}
+.stage.active{background:var(--chalk);color:var(--pitch-deep);border-color:var(--chalk)}
+.stage.locked{opacity:.4;cursor:not-allowed}
+.stage:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+
+.group-picker{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-bottom:16px}
+.gbtn{border:2px solid rgba(255,255,255,.25);background:var(--card);color:var(--chalk);border-radius:10px;padding:10px 0;font-family:'Anton',sans-serif;font-size:18px;cursor:pointer;position:relative}
+.gbtn.active{color:var(--ink);background:var(--gold);border-color:var(--gold)}
+.gbtn.done::after{content:'';position:absolute;top:5px;right:6px;width:6px;height:6px;border-radius:50%;background:var(--win)}
+.gbtn:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+
+.card{background:var(--card);border:2px solid rgba(255,255,255,.14);border-radius:var(--radius);padding:16px;margin-bottom:14px;box-shadow:0 4px 0 rgba(0,0,0,.12)}
+.card-label{font-size:11px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--chalk-dim);margin-bottom:12px;display:flex;justify-content:space-between;align-items:center}
+.card-label .tag{color:var(--gold)}
+.card-label .tag.real{color:var(--real)}
+
+.match{padding:14px 0;border-top:2px solid rgba(255,255,255,.10)}
+.match:first-of-type{border-top:none}
+.m-teams{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px}
+.m-team{display:flex;align-items:center;gap:8px;min-width:0}
+.m-team.right{justify-content:flex-end;text-align:right}
+.kit{flex:0 0 auto;display:block}
+.m-name{font-weight:800;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.form-up{color:var(--win);font-size:11px}
+.form-down{color:#FFB1AB;font-size:11px}
+.m-score{font-family:'Anton',sans-serif;font-size:30px;letter-spacing:.04em;min-width:86px;text-align:center;font-variant-numeric:tabular-nums;text-shadow:0 2px 0 rgba(0,0,0,.18)}
+.m-score .d{display:inline-block;min-width:24px}
+.m-score .sep{color:var(--chalk-dim);font-size:22px;padding:0 2px}
+.m-score.unplayed{color:rgba(255,255,255,.28);text-shadow:none}
+.m-score.is-real{color:var(--real)}
+.m-note{text-align:center;font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-top:4px;min-height:13px;line-height:1.7}
+.m-note .card-evt{color:#FFC9C5}
+.m-note .var-evt{color:var(--real)}
+.m-note .real-tag{color:var(--real)}
+.m-note .you-tag{color:var(--win)}
+
+.odds{display:flex;height:7px;border-radius:4px;overflow:hidden;margin-top:10px;background:rgba(0,0,0,.25)}
+.odds span{height:100%;transition:width .4s ease}
+.odds .oa{background:var(--hot)}
+.odds .od{background:rgba(255,255,255,.35)}
+.odds .ob{background:var(--gold)}
+.odds-labels{display:flex;justify-content:space-between;font-size:10px;font-weight:700;color:var(--chalk-dim);margin-top:5px;letter-spacing:.04em}
+
+.roll{display:block;width:100%;margin-top:12px;background:var(--hot);color:#fff;border:none;border-radius:10px;font-family:'Anton',sans-serif;font-size:18px;letter-spacing:.12em;text-transform:uppercase;padding:13px 0;cursor:pointer;box-shadow:0 4px 0 rgba(0,0,0,.22)}
+.roll:active{transform:translateY(2px);box-shadow:0 2px 0 rgba(0,0,0,.22)}
+.roll:disabled{background:rgba(0,0,0,.25);color:rgba(255,255,255,.4);cursor:default;box-shadow:none}
+.roll.secondary{background:transparent;border:2px solid rgba(255,255,255,.3);color:var(--chalk);font-size:14px;padding:10px 0;box-shadow:none}
+.roll.gold{background:var(--gold);color:var(--ink)}
+.roll:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+
+.entry{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:10px}
+.entry input{width:52px;background:rgba(0,0,0,.3);border:2px solid rgba(255,255,255,.3);color:var(--chalk);border-radius:8px;font-family:'Anton',sans-serif;font-size:20px;text-align:center;padding:6px 0}
+.entry.real-mode input{border-color:var(--real);color:var(--real)}
+.entry input:focus{outline:3px solid var(--gold);outline-offset:1px}
+.entry button{background:transparent;border:2px solid var(--chalk);color:var(--chalk);border-radius:8px;font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:8px 12px;cursor:pointer;font-family:'Archivo',sans-serif}
+.entry.real-mode button{border-color:var(--real);color:var(--real)}
+.mini-actions{display:flex;justify-content:center;gap:14px;margin-top:8px}
+.mini-btn{background:none;border:none;color:var(--chalk-dim);font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;font-family:'Archivo',sans-serif}
+.mini-btn:hover{color:var(--chalk)}
+.mini-btn.real{color:#9CC8E8}
+.mini-btn.real:hover{color:var(--real)}
+
+table{width:100%;border-collapse:collapse;font-size:13px;margin-top:4px}
+th{font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--chalk-dim);text-align:right;padding:6px 4px;border-bottom:2px solid rgba(255,255,255,.12)}
+th:first-child{text-align:left}
+td{padding:8px 4px;text-align:right;border-bottom:1px solid rgba(255,255,255,.10);font-variant-numeric:tabular-nums;font-weight:600}
+td:first-child{text-align:left;font-weight:800;display:flex;align-items:center;gap:7px}
+tr:last-child td{border-bottom:none}
+tr.q td:first-child{color:var(--win)}
+tr.maybe td:first-child{color:var(--gold)}
+.pos{color:var(--chalk-dim);font-weight:700;padding-right:2px;font-size:11px}
+
+.champ{text-align:center;padding:40px 16px;border:3px solid var(--gold);border-radius:var(--radius);background:linear-gradient(180deg,#0D8A43 0%,var(--card) 100%);margin-bottom:14px}
+.champ h2{font-family:'Anton',sans-serif;font-size:40px;text-transform:uppercase;letter-spacing:.03em;margin:10px 0 2px}
+.champ p{color:var(--gold);font-size:12px;font-weight:800;letter-spacing:.2em;text-transform:uppercase}
+
+.stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:4px}
+.stat{background:rgba(0,0,0,.22);border-radius:10px;padding:12px;text-align:center}
+.stat .v{font-family:'Anton',sans-serif;font-size:26px}
+.stat .l{font-size:9px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--chalk-dim);margin-top:2px}
+.pred-row{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:10px 0;border-top:1px solid rgba(255,255,255,.10);font-size:12px;flex-wrap:wrap}
+.pred-row:first-of-type{border-top:none}
+.pts{font-family:'Anton',sans-serif;font-size:16px}
+.pts.p3{color:var(--win)} .pts.p1{color:var(--gold)} .pts.p0{color:var(--chalk-dim)}
+.kal-row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-top:1px solid rgba(255,255,255,.10);font-size:13px}
+.kal-row:first-of-type{border-top:none}
+.kal-name{display:flex;align-items:center;gap:7px;min-width:150px}
+.kal-bar{flex:1;height:6px;background:rgba(0,0,0,.25);border-radius:3px;margin:0 12px;position:relative;overflow:hidden}
+.kal-bar i{position:absolute;top:0;bottom:0;border-radius:3px}
+.kal-val{font-variant-numeric:tabular-nums;font-weight:800;min-width:44px;text-align:right}
+
+/* modal */
+.modal-bg{position:fixed;inset:0;background:rgba(4,30,15,.78);display:flex;align-items:center;justify-content:center;z-index:50;padding:20px}
+.modal{background:var(--card);border:3px solid var(--gold);border-radius:16px;max-width:420px;width:100%;padding:22px;max-height:84vh;overflow-y:auto}
+.modal h3{font-family:'Anton',sans-serif;font-size:26px;text-transform:uppercase;letter-spacing:.02em;margin-bottom:4px}
+.modal h3 .gold{color:var(--gold)}
+.modal .rule{display:flex;gap:12px;align-items:flex-start;padding:11px 0;border-top:1px solid rgba(255,255,255,.12);font-size:14px;line-height:1.45}
+.modal .rule:first-of-type{border-top:none;margin-top:8px}
+.modal .rule .ico{font-size:20px;flex:0 0 auto}
+.modal .rule b{color:var(--gold)}
+.modal .close{margin-top:14px}
+
+@keyframes spinDigit{0%{transform:translateY(-8px);opacity:.2}100%{transform:translateY(0);opacity:1}}
+.spinning .d{animation:spinDigit .08s linear}
+@media (prefers-reduced-motion: reduce){.spinning .d{animation:none}.odds span{transition:none}}
+
+footer{text-align:center;font-size:10px;color:rgba(255,255,255,.55);margin-top:34px;line-height:1.8;padding:0 8px}
+footer b{color:rgba(255,255,255,.75)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="eyebrow">Summer 2026 · 48 Teams · 104 Games</div>
+  <h1>World Cup <span class="gold">Wizard</span></h1>
+  <div class="sub">Guess the score. Beat the Wizard. 🧙</div>
+  <button class="howto-btn" id="howtoBtn">How to play</button>
+  <div class="duel" id="duel"></div>
+</header>
+
+<div class="stages" id="stageTabs"></div>
+<div id="view"></div>
+
+<footer>
+  <b>© 2026 Copper Blue Music &amp; Media. All rights reserved.</b><br>
+  World Cup Wizard is an unofficial fan game made for fun. It is not affiliated with, endorsed by,
+  sponsored by or in any way connected to FIFA, the FIFA World Cup™, or any national federation, team,
+  league or player. Team and country names are used for identification and entertainment purposes only.
+  No official emblems, logos, kits or marks are reproduced. All scores and outcomes are fictional
+  predictions unless entered by the player. No real-money wagering — bragging rights only.
+</footer>
+</div>
+
+<div id="modalRoot"></div>
+
+<script>
+/* ================= TEAM DATA ================= */
+/* k = retro kit nod: [body, trim, pattern]  pattern: p plain · s stripes · h hoops */
+const TEAMS = {
+  MEX:{n:'Mexico',e:1790,host:true,disc:1.10,k:['#0B7A3E','#FFFFFF','p']},
+  RSA:{n:'South Africa',e:1620,disc:1.00,k:['#FFD23F','#0B7A3E','p']},
+  KOR:{n:'South Korea',e:1745,disc:0.90,k:['#E0312E','#FFFFFF','p']},
+  CZE:{n:'Czechia',e:1700,disc:1.00,k:['#D7282F','#FFFFFF','p']},
+  CAN:{n:'Canada',e:1760,host:true,disc:0.95,k:['#E0312E','#FFFFFF','p']},
+  BIH:{n:'Bosnia & Herz.',e:1665,disc:1.15,k:['#1B4F9C','#FFD23F','p']},
+  QAT:{n:'Qatar',e:1590,disc:1.05,k:['#7A1133','#FFFFFF','p']},
+  SUI:{n:'Switzerland',e:1795,disc:0.95,k:['#E0312E','#FFFFFF','p']},
+  BRA:{n:'Brazil',e:2000,disc:1.10,k:['#FFD23F','#0B7A3E','p']},
+  MAR:{n:'Morocco',e:1865,disc:1.10,k:['#C1272D','#0B7A3E','p']},
+  HAI:{n:'Haiti',e:1530,disc:1.10,k:['#1B4F9C','#E0312E','h']},
+  SCO:{n:'Scotland',e:1705,disc:1.05,k:['#1A2A6C','#FFFFFF','p']},
+  USA:{n:'United States',e:1790,host:true,disc:0.95,k:['#FFFFFF','#1B4F9C','p']},
+  PAR:{n:'Paraguay',e:1750,disc:1.25,k:['#E0312E','#FFFFFF','s']},
+  AUS:{n:'Australia',e:1700,disc:1.00,k:['#FFC72C','#0B7A3E','p']},
+  TUR:{n:'Türkiye',e:1800,disc:1.20,k:['#E0312E','#FFFFFF','p']},
+  GER:{n:'Germany',e:1930,disc:0.95,k:['#FFFFFF','#111111','p']},
+  CUW:{n:'Curaçao',e:1555,disc:1.05,k:['#1B4F9C','#FFD23F','p']},
+  CIV:{n:'Ivory Coast',e:1735,disc:1.05,k:['#FF7F27','#FFFFFF','p']},
+  ECU:{n:'Ecuador',e:1840,disc:1.15,k:['#FFD23F','#1B4F9C','p']},
+  NED:{n:'Netherlands',e:1950,disc:1.05,k:['#FF7F27','#FFFFFF','p']},
+  JPN:{n:'Japan',e:1825,disc:0.80,k:['#1A2A6C','#FFFFFF','p']},
+  SWE:{n:'Sweden',e:1725,disc:0.95,k:['#FFD23F','#1B4F9C','p']},
+  TUN:{n:'Tunisia',e:1690,disc:1.10,k:['#E0312E','#FFFFFF','p']},
+  BEL:{n:'Belgium',e:1855,disc:0.95,k:['#E0312E','#111111','p']},
+  EGY:{n:'Egypt',e:1740,disc:1.00,k:['#E0312E','#FFFFFF','p']},
+  IRN:{n:'Iran',e:1750,disc:1.05,k:['#FFFFFF','#0B7A3E','p']},
+  NZL:{n:'New Zealand',e:1590,disc:0.95,k:['#FFFFFF','#111111','p']},
+  ESP:{n:'Spain',e:2160,disc:0.90,k:['#E0312E','#FFD23F','p']},
+  CPV:{n:'Cape Verde',e:1565,disc:1.05,k:['#1B4F9C','#E0312E','p']},
+  KSA:{n:'Saudi Arabia',e:1615,disc:1.15,k:['#FFFFFF','#0B7A3E','p']},
+  URU:{n:'Uruguay',e:1850,disc:1.30,k:['#6FB7E8','#FFFFFF','p']},
+  FRA:{n:'France',e:2030,disc:1.00,k:['#1B4F9C','#FFFFFF','p']},
+  SEN:{n:'Senegal',e:1785,disc:1.05,k:['#FFFFFF','#0B7A3E','p']},
+  IRQ:{n:'Iraq',e:1620,disc:1.15,k:['#0B7A3E','#FFFFFF','p']},
+  NOR:{n:'Norway',e:1865,disc:0.90,k:['#E0312E','#1A2A6C','p']},
+  ARG:{n:'Argentina',e:2125,disc:1.20,k:['#6FB7E8','#FFFFFF','s']},
+  ALG:{n:'Algeria',e:1745,disc:1.10,k:['#FFFFFF','#0B7A3E','p']},
+  AUT:{n:'Austria',e:1800,disc:1.10,k:['#E0312E','#FFFFFF','p']},
+  JOR:{n:'Jordan',e:1600,disc:1.05,k:['#E0312E','#FFFFFF','p']},
+  POR:{n:'Portugal',e:1975,disc:1.05,k:['#7A1133','#0B7A3E','p']},
+  COD:{n:'DR Congo',e:1645,disc:1.10,k:['#1B4F9C','#FFD23F','p']},
+  UZB:{n:'Uzbekistan',e:1640,disc:1.00,k:['#FFFFFF','#6FB7E8','p']},
+  COL:{n:'Colombia',e:1865,disc:1.15,k:['#FFD23F','#1B4F9C','p']},
+  ENG:{n:'England',e:2005,disc:0.90,k:['#FFFFFF','#E0312E','p']},
+  CRO:{n:'Croatia',e:1845,disc:1.05,k:['#E0312E','#FFFFFF','s']},
+  GHA:{n:'Ghana',e:1675,disc:1.10,k:['#FFFFFF','#FFD23F','p']},
+  PAN:{n:'Panama',e:1650,disc:1.15,k:['#E0312E','#FFFFFF','p']}
+};
+const GROUPS = {
+  A:['MEX','RSA','KOR','CZE'], B:['CAN','BIH','QAT','SUI'],
+  C:['BRA','MAR','HAI','SCO'], D:['USA','PAR','AUS','TUR'],
+  E:['GER','CUW','CIV','ECU'], F:['NED','JPN','SWE','TUN'],
+  G:['BEL','EGY','IRN','NZL'], H:['ESP','CPV','KSA','URU'],
+  I:['FRA','SEN','IRQ','NOR'], J:['ARG','ALG','AUT','JOR'],
+  K:['POR','COD','UZB','COL'], L:['ENG','CRO','GHA','PAN']
+};
+const FIX_ORDER = [[0,1],[2,3],[0,2],[3,1],[3,0],[1,2]];
+
+/* ---------- retro kit chip (SVG) ---------- */
+function kitSVG(id,size=24){
+  const [c1,c2,p]=TEAMS[id].k;
+  const u='u'+id+Math.floor(size);
+  let patternFill='';
+  if(p==='s')patternFill=`<rect x="12" y="4" width="3" height="22" fill="${c2}"/><rect x="18" y="4" width="3" height="22" fill="${c2}"/>`;
+  if(p==='h')patternFill=`<rect x="9" y="10" width="15" height="3.5" fill="${c2}"/><rect x="9" y="18" width="15" height="3.5" fill="${c2}"/>`;
+  return `<svg class="kit" width="${size}" height="${size*0.9}" viewBox="0 0 33 28" aria-hidden="true">
+    <rect x="1" y="5" width="7.5" height="8" rx="1.5" fill="${c2}"/>
+    <rect x="24.5" y="5" width="7.5" height="8" rx="1.5" fill="${c2}"/>
+    <rect x="8" y="4" width="17" height="22" rx="2" fill="${c1}" stroke="rgba(0,0,0,.18)" stroke-width="1"/>
+    ${patternFill}
+    <rect x="13.5" y="3" width="6" height="3" rx="1" fill="${c2}"/>
+  </svg>`;
+}
+
+/* ================= ENGINE (the Wizard's brain) ================= */
+const KAL={};
+function kalInit(){for(const id in TEAMS)KAL[id]={mu:0,sigma2:2500,simMu:0}}
+kalInit();
+const GD_TO_ELO=40, OBS_REAL=2200, OBS_SIM=9000, PROC=120;
+function kalmanUpdate(id,innov,isReal){
+  const k=KAL[id], obs=isReal?OBS_REAL:OBS_SIM;
+  const K=k.sigma2/(k.sigma2+obs);
+  const d=Math.max(-70,Math.min(70,K*innov*GD_TO_ELO));
+  if(isReal)k.mu=Math.max(-160,Math.min(160,k.mu+d));
+  else k.simMu=Math.max(-120,Math.min(120,k.simMu+d));
+  k.sigma2=(1-K)*k.sigma2+PROC;
+}
+function form(id){return KAL[id].mu+KAL[id].simMu}
+function resetSimForm(){for(const id in KAL){KAL[id].simMu=0;KAL[id].sigma2=Math.max(KAL[id].sigma2,1600)}}
+function dynElo(id){const t=TEAMS[id];return t.e+(t.host?50:0)+form(id)}
+function winProb(a,b){return 1/(1+Math.pow(10,-(dynElo(a)-dynElo(b))/400))}
+function xgPair(a,b){const p=winProb(a,b);return [Math.max(0.25,0.3+2.0*p),Math.max(0.25,0.3+2.0*(1-p))]}
+function poisson(l){const L=Math.exp(-l);let k=0,p=1;do{k++;p*=Math.random()}while(p>L);return k-1}
+const RED_BASE=0.075;
+function playMatch(a,b){
+  let [xa,xb]=xgPair(a,b);
+  const cards=[],chaos=0.55+Math.random()*1.45;
+  for(const [id,side] of [[a,'A'],[b,'B']]){
+    if(Math.random()<RED_BASE*TEAMS[id].disc*chaos){
+      const minute=25+Math.floor(Math.random()*65),f=(90-minute)/90;
+      if(side==='A'){xa*=(1-0.38*f);xb*=(1+0.28*f)}else{xb*=(1-0.38*f);xa*=(1+0.28*f)}
+      cards.push({id,minute,varCall:chaos>1.55});
+    }
+  }
+  return {s:[poisson(xa),poisson(xb)],cards};
+}
+function playET(a,b){const [xa,xb]=xgPair(a,b);return [poisson(xa/3),poisson(xb/3)]}
+function penWinner(a,b){const p=Math.min(0.65,Math.max(0.35,0.5+(dynElo(a)-dynElo(b))/4000));return Math.random()<p?a:b}
+function mcOdds(a,b,ko){
+  let wa=0,d=0,wb=0;
+  for(let i=0;i<2500;i++){const r=playMatch(a,b).s;if(r[0]>r[1])wa++;else if(r[0]<r[1])wb++;else d++}
+  if(ko)return {a:Math.round((wa+d*0.5)/25),d:0,b:Math.round((wb+d*0.5)/25)};
+  return {a:Math.round(wa/25),d:Math.round(d/25),b:Math.round(wb/25)};
+}
+function applyForm(a,b,ga,gb,isReal){
+  const [xa,xb]=xgPair(a,b);
+  const innov=(ga-gb)-(xa-xb);
+  kalmanUpdate(a,innov,isReal);kalmanUpdate(b,-innov,isReal);
+}
+
+/* ================= STATE + SAFE SAVE ================= */
+const store=(()=>{try{const k='__wcw_t';localStorage.setItem(k,'1');localStorage.removeItem(k);return localStorage}catch(e){return null}})();
+const state={
+  stage:'groups',activeGroup:'A',
+  wiz:{},   // key -> {s,cards}   Wizard's call
+  you:{},   // key -> {s}         Your call
+  real:{},  // key -> {s}         Real result
+  ko:{r32:[],r16:[],qf:[],sf:[],f:[]},
+  koBuilt:false,champion:null,
+  openEntry:null // {key,mode:'you'|'real'}
+};
+function save(){
+  if(!store)return;
+  try{store.setItem('wcwizard_v3',JSON.stringify({wiz:state.wiz,you:state.you,real:state.real,ko:state.ko,koBuilt:state.koBuilt,champion:state.champion,KAL}))}catch(e){}
+}
+function load(){
+  if(!store)return;
+  try{
+    const raw=store.getItem('wcwizard_v3');if(!raw)return;
+    const d=JSON.parse(raw);
+    state.wiz=d.wiz||{};state.you=d.you||{};state.real=d.real||{};
+    state.ko=d.ko||state.ko;state.koBuilt=!!d.koBuilt;state.champion=d.champion||null;
+    if(d.KAL)for(const id in KAL)if(d.KAL[id])KAL[id]=d.KAL[id];
+  }catch(e){}
+}
+load();
+
+function groupMatches(g){const t=GROUPS[g];return FIX_ORDER.map((p,i)=>({key:g+i,a:t[p[0]],b:t[p[1]]}))}
+function settled(key){return state.real[key]?state.real[key].s:(state.wiz[key]?state.wiz[key].s:null)}
+function groupComplete(g){return groupMatches(g).every(m=>settled(m.key))}
+function allGroupsComplete(){return Object.keys(GROUPS).every(groupComplete)}
+function groupTable(g){
+  const rows=GROUPS[g].map(id=>({id,p:0,w:0,d:0,l:0,gf:0,ga:0,pts:0}));
+  const idx=Object.fromEntries(rows.map((r,i)=>[r.id,i]));
+  groupMatches(g).forEach(m=>{
+    const r=settled(m.key);if(!r)return;
+    const A=rows[idx[m.a]],B=rows[idx[m.b]];
+    A.p++;B.p++;A.gf+=r[0];A.ga+=r[1];B.gf+=r[1];B.ga+=r[0];
+    if(r[0]>r[1]){A.w++;B.l++;A.pts+=3}else if(r[0]<r[1]){B.w++;A.l++;B.pts+=3}else{A.d++;B.d++;A.pts++;B.pts++}
+  });
+  rows.sort((a,b)=>b.pts-a.pts||(b.gf-b.ga)-(a.gf-a.ga)||b.gf-a.gf||dynElo(b.id)-dynElo(a.id));
+  return rows;
+}
+function buildKO(){
+  const W={},R={},T=[];
+  for(const g of Object.keys(GROUPS)){const tb=groupTable(g);W[g]=tb[0].id;R[g]=tb[1].id;T.push({g,...tb[2]})}
+  T.sort((a,b)=>b.pts-a.pts||(b.gf-b.ga)-(a.gf-a.ga)||b.gf-a.gf||dynElo(b.id)-dynElo(a.id));
+  const th=T.slice(0,8).map(t=>t.id);
+  const pr=(a,b)=>({a,b,res:null,et:null,winner:null,pens:false,cards:[]});
+  state.ko.r32=[
+    pr(R['A'],R['B']),pr(W['C'],R['F']),pr(W['E'],th[0]),pr(W['F'],R['C']),
+    pr(R['E'],R['I']),pr(W['I'],th[1]),pr(W['A'],th[2]),pr(W['L'],th[3]),
+    pr(W['D'],th[4]),pr(R['G'],R['K']),pr(W['B'],th[5]),pr(W['J'],th[6]),
+    pr(W['H'],th[7]),pr(R['D'],R['H']),pr(W['G'],R['L']),pr(W['K'],R['J'])
+  ];
+  state.ko.r16=[];state.ko.qf=[];state.ko.sf=[];state.ko.f=[];
+  state.koBuilt=true;state.champion=null;save();
+}
+function advanceRound(from,to){
+  const src=state.ko[from];
+  if(!src.length||!src.every(m=>m.winner))return;
+  if(state.ko[to].length)return;
+  const next=[];
+  for(let i=0;i<src.length;i+=2)next.push({a:src[i].winner,b:src[i+1].winner,res:null,et:null,winner:null,pens:false,cards:[]});
+  state.ko[to]=next;
+}
+function rollKO(round,i){
+  const m=state.ko[round][i];
+  const r=playMatch(m.a,m.b);
+  m.res=r.s;m.cards=r.cards;
+  applyForm(m.a,m.b,r.s[0],r.s[1],false);
+  if(r.s[0]===r.s[1]){
+    const [ea,eb]=playET(m.a,m.b);
+    m.et=[r.s[0]+ea,r.s[1]+eb];
+    if(ea===eb){m.pens=true;m.winner=penWinner(m.a,m.b)}else m.winner=ea>eb?m.a:m.b;
+  }else m.winner=r.s[0]>r.s[1]?m.a:m.b;
+  if(round==='r32'&&state.ko.r32.every(x=>x.winner))advanceRound('r32','r16');
+  if(round==='r16'&&state.ko.r16.every(x=>x.winner))advanceRound('r16','qf');
+  if(round==='qf'&&state.ko.qf.every(x=>x.winner))advanceRound('qf','sf');
+  if(round==='sf'&&state.ko.sf.every(x=>x.winner))advanceRound('sf','f');
+  if(round==='f'&&m.winner)state.champion=m.winner;
+  save();
+}
+
+/* ---------- scoring ---------- */
+function outcome(s){return s[0]>s[1]?'A':(s[0]<s[1]?'B':'D')}
+function gradeOne(pred,real){
+  if(!pred||!real)return null;
+  if(pred[0]===real[0]&&pred[1]===real[1])return 3;
+  return outcome(pred)===outcome(real)?1:0;
+}
+function totals(){
+  let you=0,wiz=0,n=0;const rows=[];
+  for(const g of Object.keys(GROUPS))for(const m of groupMatches(g)){
+    const r=state.real[m.key];if(!r)continue;
+    const ys=state.you[m.key]?gradeOne(state.you[m.key].s,r.s):null;
+    const ws=state.wiz[m.key]?gradeOne(state.wiz[m.key].s,r.s):null;
+    if(ys===null&&ws===null)continue;
+    n++;you+=ys||0;wiz+=ws||0;
+    rows.push({m,ys,ws,r:r.s,y:state.you[m.key]?state.you[m.key].s:null,w:state.wiz[m.key]?state.wiz[m.key].s:null});
+  }
+  return {you,wiz,n,rows};
+}
+
+/* ================= UI ================= */
+const STAGES=[
+  {id:'groups',label:'Groups'},{id:'r32',label:'R32'},{id:'r16',label:'R16'},
+  {id:'qf',label:'QF'},{id:'sf',label:'SF'},{id:'f',label:'Final'},{id:'tracker',label:'You vs Wizard'}
+];
+const $=s=>document.querySelector(s);
+function el(h){const d=document.createElement('div');d.innerHTML=h.trim();return d.firstChild}
+function formArrow(id){
+  const f=form(id);
+  if(f>20)return ` <span class="form-up">▲</span>`;
+  if(f<-20)return ` <span class="form-down">▼</span>`;
+  return '';
+}
+function renderDuel(){
+  const t=totals();
+  $('#duel').innerHTML=`
+    <span class="side">You</span><span class="num">${t.you}</span>
+    <span class="vs">VS</span>
+    <span class="num">${t.wiz}</span><span class="side">Wizard 🧙</span>`;
+}
+function stageUnlocked(id){
+  if(id==='groups'||id==='tracker')return true;
+  if(id==='r32')return state.koBuilt||allGroupsComplete();
+  const o=['r32','r16','qf','sf','f'];
+  const prev=o[o.indexOf(id)-1];
+  return state.ko[prev]&&state.ko[prev].length>0&&state.ko[prev].every(m=>m.winner);
+}
+function renderTabs(){
+  const c=$('#stageTabs');c.innerHTML='';
+  STAGES.forEach(s=>{
+    const u=stageUnlocked(s.id);
+    const b=el(`<button class="stage ${state.stage===s.id?'active':''} ${u?'':'locked'}">${s.label}</button>`);
+    if(u)b.onclick=()=>{if(s.id==='r32'&&!state.koBuilt)buildKO();state.stage=s.id;render()};
+    c.appendChild(b);
+  });
+}
+function animateScore(e,final,done){
+  const reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(reduce){setScore(e,final);done&&done();return}
+  let t=0;e.classList.add('spinning');
+  const iv=setInterval(()=>{
+    setScore(e,[Math.floor(Math.random()*5),Math.floor(Math.random()*5)]);
+    if(++t>=10){clearInterval(iv);e.classList.remove('spinning');setScore(e,final);done&&done()}
+  },70);
+}
+function setScore(e,s){e.innerHTML=`<span class="d">${s[0]}</span><span class="sep">–</span><span class="d">${s[1]}</span>`;e.classList.remove('unplayed')}
+function cardNotes(cards){
+  if(!cards||!cards.length)return '';
+  return cards.map(c=>`<span class="card-evt">🟥 ${TEAMS[c.id].n} ${c.minute}'</span>${c.varCall?' <span class="var-evt">· VAR drama!</span>':''}`).join('<br>');
+}
+function matchRow(a,b,display,noteHTML,odds,isReal){
+  const ta=TEAMS[a],tb=TEAMS[b];
+  const row=el(`<div class="match">
+    <div class="m-teams">
+      <div class="m-team">${kitSVG(a,26)}<span class="m-name">${ta.n}${formArrow(a)}</span></div>
+      <div class="m-score ${display?'':'unplayed'} ${isReal?'is-real':''}">${display?'':'<span class="d">·</span><span class="sep">–</span><span class="d">·</span>'}</div>
+      <div class="m-team right"><span class="m-name">${tb.n}${formArrow(b)}</span>${kitSVG(b,26)}</div>
+    </div>
+    <div class="m-note">${noteHTML||''}</div>
+    ${odds?`<div class="odds"><span class="oa" style="width:${odds.a}%"></span>${odds.d?`<span class="od" style="width:${odds.d}%"></span>`:''}<span class="ob" style="width:${odds.b}%"></span></div>
+    <div class="odds-labels"><span>${ta.n.split(' ')[0]} ${odds.a}%</span>${odds.d?`<span>Draw ${odds.d}%</span>`:''}<span>${tb.n.split(' ')[0]} ${odds.b}%</span></div>`:''}
+  </div>`);
+  row._scoreEl=row.querySelector('.m-score');
+  if(display)setScore(row._scoreEl,display);
+  return row;
+}
+function entryUI(m,mode){
+  const isReal=mode==='real';
+  const e=el(`<div class="entry ${isReal?'real-mode':''}">
+    <input type="number" min="0" max="15" inputmode="numeric" placeholder="0" aria-label="${TEAMS[m.a].n} goals">
+    <span style="color:var(--chalk-dim)">–</span>
+    <input type="number" min="0" max="15" inputmode="numeric" placeholder="0" aria-label="${TEAMS[m.b].n} goals">
+    <button>${isReal?'Save result':'Lock it in'}</button></div>`);
+  const [ia,ib]=e.querySelectorAll('input');
+  e.querySelector('button').onclick=()=>{
+    const ga=parseInt(ia.value),gb=parseInt(ib.value);
+    if(isNaN(ga)||isNaN(gb))return;
+    if(isReal){state.real[m.key]={s:[ga,gb]};applyForm(m.a,m.b,ga,gb,true)}
+    else state.you[m.key]={s:[ga,gb]};
+    state.openEntry=null;save();render();
+  };
+  return e;
+}
+
+/* ---------- groups ---------- */
+function renderGroups(view){
+  const picker=el(`<div class="group-picker"></div>`);
+  Object.keys(GROUPS).forEach(g=>{
+    const b=el(`<button class="gbtn ${g===state.activeGroup?'active':''} ${groupComplete(g)?'done':''}">${g}</button>`);
+    b.onclick=()=>{state.activeGroup=g;render()};
+    picker.appendChild(b);
+  });
+  view.appendChild(picker);
+
+  const g=state.activeGroup;
+  const matches=groupMatches(g);
+  const card=el(`<div class="card"><div class="card-label"><span>Group ${g} · Fixtures</span><span class="tag">${matches.filter(m=>settled(m.key)).length}/6 settled</span></div></div>`);
+
+  let nextRollable=matches.find(m=>!state.wiz[m.key]&&!state.real[m.key]);
+  matches.forEach(m=>{
+    const real=state.real[m.key],wiz=state.wiz[m.key],you=state.you[m.key];
+    const display=real?real.s:(wiz?wiz.s:null);
+    let note='';
+    if(real){
+      note=`<span class="real-tag">Full time (real)</span>`;
+      if(you){const s=gradeOne(you.s,real.s);note+=` · <span class="you-tag">you ${you.s[0]}–${you.s[1]} ${s===3?'+3!':(s===1?'+1':'+0')}</span>`}
+      if(wiz){const s=gradeOne(wiz.s,real.s);note+=` · wizard ${wiz.s[0]}–${wiz.s[1]} ${s===3?'+3':(s===1?'+1':'+0')}`}
+      else note+=' · wizard made no call';
+    } else {
+      const bits=[];
+      if(wiz)bits.push(`🧙 Wizard's call ${wiz.s[0]}–${wiz.s[1]}`);
+      if(you)bits.push(`<span class="you-tag">⚽ Your call ${you.s[0]}–${you.s[1]}</span>`);
+      if(wiz){const cn=cardNotes(wiz.cards);if(cn)bits.push(cn)}
+      note=bits.join('<br>');
+    }
+    const isNext=nextRollable&&m.key===nextRollable.key;
+    const odds=(!display&&isNext)?mcOdds(m.a,m.b,false):null;
+    const row=matchRow(m.a,m.b,display,note,odds,!!real);
+    m._row=row;
+
+    if(state.openEntry&&state.openEntry.key===m.key){
+      row.appendChild(entryUI(m,state.openEntry.mode));
+    } else if(!real){
+      const actions=el(`<div class="mini-actions"></div>`);
+      if(!wiz){
+        const db=el(`<button class="mini-btn">🎲 wizard's call</button>`);
+        db.onclick=()=>{
+          db.disabled=true;
+          const r=playMatch(m.a,m.b);
+          animateScore(row._scoreEl,r.s,()=>{
+            state.wiz[m.key]=r;
+            applyForm(m.a,m.b,r.s[0],r.s[1],false);
+            save();render();
+          });
+        };
+        actions.appendChild(db);
+      }
+      if(!you){
+        const yb=el(`<button class="mini-btn">⚽ your call</button>`);
+        yb.onclick=()=>{state.openEntry={key:m.key,mode:'you'};render()};
+        actions.appendChild(yb);
+      }
+      const rb=el(`<button class="mini-btn real">📋 real score</button>`);
+      rb.onclick=()=>{state.openEntry={key:m.key,mode:'real'};render()};
+      actions.appendChild(rb);
+      row.appendChild(actions);
+    }
+    card.appendChild(row);
+  });
+
+  const rollBtn=el(`<button class="roll">${nextRollable?'🎲 Wizard, predict next match':'All fixtures settled'}</button>`);
+  rollBtn.disabled=!nextRollable;
+  rollBtn.onclick=()=>{
+    if(!nextRollable)return;
+    rollBtn.disabled=true;
+    const m=nextRollable;
+    const r=playMatch(m.a,m.b);
+    animateScore(m._row._scoreEl,r.s,()=>{
+      state.wiz[m.key]=r;
+      applyForm(m.a,m.b,r.s[0],r.s[1],false);
+      save();render();
+    });
+  };
+  card.appendChild(rollBtn);
+
+  if(nextRollable){
+    const fast=el(`<button class="roll secondary" style="margin-top:8px">Wizard, do the whole group</button>`);
+    fast.onclick=()=>{
+      groupMatches(g).forEach(m=>{
+        if(!state.wiz[m.key]&&!state.real[m.key]){
+          const r=playMatch(m.a,m.b);state.wiz[m.key]=r;
+          applyForm(m.a,m.b,r.s[0],r.s[1],false);
+        }
+      });
+      save();render();
+    };
+    card.appendChild(fast);
+  }
+  view.appendChild(card);
+
+  const tb=groupTable(g),played=groupComplete(g);
+  const tcard=el(`<div class="card"><div class="card-label"><span>Group ${g} · Table</span><span class="tag">${played?'Final':'Live'}</span></div>
+    <table><thead><tr><th>Team</th><th>P</th><th>W</th><th>D</th><th>L</th><th>GD</th><th>Pts</th></tr></thead><tbody></tbody></table></div>`);
+  const tbody=tcard.querySelector('tbody');
+  tb.forEach((r,i)=>{
+    const cls=played?(i<2?'q':(i===2?'maybe':'')):'';
+    tbody.appendChild(el(`<tr class="${cls}"><td><span class="pos">${i+1}</span>${kitSVG(r.id,18)} ${TEAMS[r.id].n}${formArrow(r.id)}</td><td>${r.p}</td><td>${r.w}</td><td>${r.d}</td><td>${r.l}</td><td>${r.gf-r.ga>0?'+':''}${r.gf-r.ga}</td><td><b>${r.pts}</b></td></tr>`));
+  });
+  view.appendChild(tcard);
+
+  const remaining=Object.keys(GROUPS).filter(x=>!groupComplete(x));
+  if(remaining.length){
+    const all=el(`<button class="roll secondary">Wizard, predict all remaining groups (${remaining.length})</button>`);
+    all.onclick=()=>{
+      remaining.forEach(gr=>groupMatches(gr).forEach(m=>{
+        if(!state.wiz[m.key]&&!state.real[m.key]){
+          const r=playMatch(m.a,m.b);state.wiz[m.key]=r;
+          applyForm(m.a,m.b,r.s[0],r.s[1],false);
+        }
+      }));
+      save();render();
+    };
+    view.appendChild(all);
+  } else {
+    const go=el(`<button class="roll gold">Build the Round of 32 →</button>`);
+    go.onclick=()=>{if(!state.koBuilt)buildKO();state.stage='r32';render()};
+    view.appendChild(go);
+  }
+}
+
+/* ---------- knockout ---------- */
+const RN={r32:'Round of 32',r16:'Round of 16',qf:'Quarter-finals',sf:'Semi-finals',f:'Final'};
+function renderKO(view,round){
+  if(state.champion&&round==='f'){
+    const c=TEAMS[state.champion];
+    view.appendChild(el(`<div class="champ">${kitSVG(state.champion,84)}<h2>${c.n}</h2><p>World Champions 2026 🏆</p></div>`));
+  }
+  const ms=state.ko[round];
+  if(!ms||ms.length===0){
+    view.appendChild(el(`<div class="card"><div class="card-label">${RN[round]}</div><div class="m-note" style="text-align:left">Finish the previous round to unlock these games.</div></div>`));
+    return;
+  }
+  const card=el(`<div class="card"><div class="card-label"><span>${RN[round]}</span><span class="tag">${ms.filter(m=>m.winner).length}/${ms.length} played</span></div></div>`);
+  ms.forEach((m,i)=>{
+    let note='';
+    if(m.winner){
+      const w=TEAMS[m.winner];
+      note=m.pens?`${w.n} win on penalties`:(m.et?`${w.n} win ${m.et[0]}–${m.et[1]} aet`:`${w.n} go through`);
+      const cn=cardNotes(m.cards);if(cn)note=cn+'<br>'+note;
+    }
+    const display=m.et||m.res;
+    const odds=m.winner?null:mcOdds(m.a,m.b,true);
+    const row=matchRow(m.a,m.b,display,note,odds,false);
+    if(!m.winner){
+      const b=el(`<button class="roll" style="margin-top:10px;font-size:15px;padding:10px 0">🎲 Roll</button>`);
+      b.onclick=()=>{b.disabled=true;rollKO(round,i);const mm=state.ko[round][i];animateScore(row._scoreEl,mm.et||mm.res,()=>render())};
+      row.appendChild(b);
+    }
+    card.appendChild(row);
+  });
+  view.appendChild(card);
+
+  if(!ms.every(m=>m.winner)){
+    const fast=el(`<button class="roll secondary">Wizard, do the whole round</button>`);
+    fast.onclick=()=>{ms.forEach((m,i)=>{if(!m.winner)rollKO(round,i)});render()};
+    view.appendChild(fast);
+  } else if(round!=='f'){
+    const o=['r32','r16','qf','sf','f'];
+    const next=o[o.indexOf(round)+1];
+    const go=el(`<button class="roll gold">Go to ${RN[next]} →</button>`);
+    go.onclick=()=>{state.stage=next;render()};
+    view.appendChild(go);
+  }
+  if(state.champion){
+    const reset=el(`<button class="roll secondary" style="margin-top:8px">New timeline — roll it all again</button>`);
+    reset.onclick=()=>{
+      state.wiz={};state.ko={r32:[],r16:[],qf:[],sf:[],f:[]};
+      state.koBuilt=false;state.champion=null;state.stage='groups';
+      resetSimForm();save();render();
+    };
+    view.appendChild(reset);
+  }
+}
+
+/* ---------- tracker ---------- */
+function renderTracker(view){
+  const t=totals();
+  const lead = t.you>t.wiz?'You\'re beating the Wizard! 🔥':(t.you<t.wiz?'The Wizard leads… for now. 🧙':'All square. Next result decides it.');
+  const top=el(`<div class="card"><div class="card-label"><span>You vs The Wizard</span><span class="tag real">${t.n} games graded</span></div>
+    <div class="stat-grid">
+      <div class="stat"><div class="v" style="color:var(--win)">${t.you}</div><div class="l">Your points</div></div>
+      <div class="stat"><div class="v" style="color:var(--gold)">${t.wiz}</div><div class="l">Wizard points</div></div>
+      <div class="stat"><div class="v" style="color:var(--real)">${t.n}</div><div class="l">Graded</div></div>
+    </div>
+    <div class="m-note" style="text-align:left;margin-top:10px">${lead}</div>
+  </div>`);
+  view.appendChild(top);
+
+  if(t.rows.length){
+    const list=el(`<div class="card"><div class="card-label">Graded games</div></div>`);
+    t.rows.forEach(r=>{
+      list.appendChild(el(`<div class="pred-row">
+        <span style="display:flex;align-items:center;gap:6px">${kitSVG(r.m.a,16)} v ${kitSVG(r.m.b,16)} <b style="color:var(--real)">${r.r[0]}–${r.r[1]}</b></span>
+        <span style="color:var(--chalk-dim)">you ${r.y?r.y[0]+'–'+r.y[1]:'—'} <span class="pts p${r.ys===null?0:r.ys}">${r.ys===null?'·':'+'+r.ys}</span> · wiz ${r.w?r.w[0]+'–'+r.w[1]:'—'} <span class="pts p${r.ws===null?0:r.ws}">${r.ws===null?'·':'+'+r.ws}</span></span>
+      </div>`));
+    });
+    view.appendChild(list);
+  }
+
+  const movers=Object.keys(TEAMS).map(id=>({id,f:form(id)})).filter(x=>Math.abs(x.f)>=8).sort((a,b)=>b.f-a.f).slice(0,14);
+  const kcard=el(`<div class="card"><div class="card-label"><span>Hot &amp; cold</span><span class="tag">tournament form</span></div></div>`);
+  if(!movers.length){
+    kcard.appendChild(el(`<div class="m-note" style="text-align:left">No form yet. Once games happen — predicted or real — teams heat up ▲ or go cold ▼, and the Wizard adjusts his thinking.</div>`));
+  } else {
+    movers.forEach(x=>{
+      const pct=Math.min(100,Math.abs(x.f)/160*100);
+      const col=x.f>0?'var(--win)':'#FF8A80';
+      kcard.appendChild(el(`<div class="kal-row">
+        <span class="kal-name">${kitSVG(x.id,18)} ${TEAMS[x.id].n}</span>
+        <span class="kal-bar"><i style="${x.f>0?'left:50%':'right:50%'};width:${pct/2}%;background:${col}"></i></span>
+        <span class="kal-val" style="color:${col}">${x.f>0?'▲':'▼'}</span>
+      </div>`));
+    });
+  }
+  view.appendChild(kcard);
+
+  const wipe=el(`<button class="roll secondary" style="margin-top:4px">⚠️ Wipe everything &amp; start fresh</button>`);
+  wipe.onclick=()=>{
+    state.wiz={};state.you={};state.real={};
+    state.ko={r32:[],r16:[],qf:[],sf:[],f:[]};
+    state.koBuilt=false;state.champion=null;
+    kalInit();save();state.stage='groups';render();
+  };
+  view.appendChild(wipe);
+}
+
+/* ---------- how to play modal ---------- */
+function showHowTo(){
+  const root=$('#modalRoot');
+  const bg=el(`<div class="modal-bg" role="dialog" aria-modal="true" aria-label="How to play">
+    <div class="modal">
+      <h3>How to <span class="gold">play</span></h3>
+      <div class="rule"><span class="ico">⚽</span><span><b>Make your call.</b> Pick any game and lock in your scoreline before kick-off.</span></div>
+      <div class="rule"><span class="ico">🎲</span><span><b>Roll the Wizard.</b> Hit the button and the Wizard predicts the score — reds, VAR drama and all.</span></div>
+      <div class="rule"><span class="ico">📋</span><span><b>Enter the real result</b> after full time. That settles the game.</span></div>
+      <div class="rule"><span class="ico">🏅</span><span><b>Exact score = 3 points. Right result = 1 point.</b> Most points wins. Simple.</span></div>
+      <div class="rule"><span class="ico">🔥</span><span><b>Form matters.</b> Teams run hot ▲ or cold ▼ as results come in — the Wizard learns. Can you stay ahead of him?</span></div>
+      <div class="rule"><span class="ico">🏆</span><span><b>Roll the whole tournament</b> any time to see the Wizard's pick to lift the trophy — then reset and run a new timeline.</span></div>
+      <button class="roll gold close">Got it — let's play</button>
+    </div>
+  </div>`);
+  bg.querySelector('.close').onclick=()=>root.innerHTML='';
+  bg.onclick=e=>{if(e.target===bg)root.innerHTML=''};
+  root.appendChild(bg);
+}
+$('#howtoBtn').onclick=showHowTo;
+
+function render(){
+  renderTabs();renderDuel();
+  const view=$('#view');view.innerHTML='';
+  if(state.stage==='groups')renderGroups(view);
+  else if(state.stage==='tracker')renderTracker(view);
+  else renderKO(view,state.stage);
+}
+render();
+if(store && !store.getItem('wcwizard_seen')){try{store.setItem('wcwizard_seen','1')}catch(e){} showHowTo();}
+</script>
+</body>
+</html>
